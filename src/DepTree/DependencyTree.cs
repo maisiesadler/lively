@@ -11,7 +11,7 @@ namespace DepTree
 
         private static DependencyTreeNode GetDependencies(Assembly assembly, string typeName, string name, int depth = 0)
         {
-            var type = assembly.GetType(typeName);
+            var type = assembly.GetType(typeName, throwOnError: true);
 
             var ctors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
 
