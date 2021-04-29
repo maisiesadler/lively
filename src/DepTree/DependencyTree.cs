@@ -11,13 +11,17 @@ namespace DepTree
 
         private static DependencyTreeNode GetDependencies(Assembly assembly, string typeName, string name, int depth = 0)
         {
-            var type = assembly.GetType(typeName, throwOnError: true);
+            var type = assembly.GetType(typeName);
+            if (type == null)
+            {
+                return new DependencyTreeNode(name, type, DependencyTreeError.UnknownType);
+            }
 
             var ctors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
 
             if (ctors.Length != 1)
             {
-                throw new Exception($":( there are {ctors.Length} ctors");
+                return new DependencyTreeNode(name, type, DependencyTreeError.IncorrectConstructors);
             }
 
             var c = ctors[0];

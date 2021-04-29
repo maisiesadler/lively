@@ -14,6 +14,7 @@ namespace DepTree.Tests
             var depTree = DependencyTree.Create(assembly, fullTypeName);
 
             Assert.NotNull(depTree);
+            Assert.Null(depTree.Error);
             Assert.Equal("root", depTree.Name);
             Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleType", depTree.Type.FullName);
             Assert.Empty(depTree.Children);
@@ -28,6 +29,7 @@ namespace DepTree.Tests
             var depTree = DependencyTree.Create(assembly, fullTypeName);
 
             Assert.NotNull(depTree);
+            Assert.Null(depTree.Error);
             Assert.Equal("root", depTree.Name);
             Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleTypeWithDeps", depTree.Type.FullName);
             var childdep = Assert.Single(depTree.Children);
