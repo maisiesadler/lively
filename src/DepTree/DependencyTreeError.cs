@@ -4,5 +4,6 @@ namespace DepTree
     {
         UnknownType,
         IncorrectConstructors,
+        NoImplementation,
     }
 }
