@@ -9,9 +9,10 @@ namespace DepTree.Tests
         public void TypeDoesNotExist()
         {
             var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "Nonsense";
 
-            var depTree = DependencyTree.Create(assembly, fullTypeName);
+            var depTree = DependencyTree.Create(config, fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);
@@ -26,8 +27,9 @@ namespace DepTree.Tests
         public void IncorrectConstructors(string fullTypeName)
         {
             var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
 
-            var depTree = DependencyTree.Create(assembly, fullTypeName);
+            var depTree = DependencyTree.Create(config, fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);
@@ -40,9 +42,10 @@ namespace DepTree.Tests
         public void ExampleWithErrorDepHasChildWithError()
         {
             var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.ErrorTests+ExampleWithErrorDep";
 
-            var depTree = DependencyTree.Create(assembly, fullTypeName);
+            var depTree = DependencyTree.Create(config, fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);

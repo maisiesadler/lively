@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -10,9 +11,10 @@ namespace DepTree.Tests
         public void GivenAssemblyAndClassNameDependencyTreeCreated()
         {
             var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleType";
 
-            var depTree = DependencyTree.Create(assembly, fullTypeName);
+            var depTree = DependencyTree.Create(config, fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -25,9 +27,10 @@ namespace DepTree.Tests
         public void GivenAssemblyAndClassNameWithDependenciesDependencyTreeCreated()
         {
             var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithDeps";
 
-            var depTree = DependencyTree.Create(assembly, fullTypeName);
+            var depTree = DependencyTree.Create(config, fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -45,9 +48,35 @@ namespace DepTree.Tests
         public void CanResolveInterfaceDependencies()
         {
             var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithInterfaceDeps";
 
-            var depTree = DependencyTree.Create(assembly, fullTypeName);
+            var depTree = DependencyTree.Create(config, fullTypeName);
+
+            Assert.NotNull(depTree);
+            Assert.Null(depTree.Error);
+            Assert.Equal("root", depTree.Name);
+            Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleTypeWithInterfaceDeps", depTree.Type.FullName);
+            var childdep = Assert.Single(depTree.Children);
+
+            Assert.NotNull(childdep);
+            Assert.Null(childdep.Error);
+            Assert.Equal("example", childdep.Name);
+            Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleInterface", childdep.Type.FullName);
+            Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleImplementation", childdep.Implementation.FullName);
+            Assert.Empty(childdep.Children);
+        }
+
+        [Fact]
+        public void CanResolveInterfaceDependenciesWithConfig()
+        {
+            var assembly = this.GetType().Assembly;
+            var cfgBuilder = new ConfigurationBuilder();
+            var iconfiguration = cfgBuilder.Build();
+            var config = new DependencyTreeConfig(assembly, iconfiguration, startupName:  "StartupWithConfig");
+            var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithInterfaceDeps";
+
+            var depTree = DependencyTree.Create(config, fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -93,6 +122,21 @@ namespace DepTree.Tests
 
         public class Startup
         {
+            public void ConfigureServices(IServiceCollection services)
+            {
+                services.AddTransient<ExampleInterface, ExampleImplementation>();
+            }
+        }
+
+        public class StartupWithConfig
+        {
+            private readonly IConfiguration _configuration;
+
+            public StartupWithConfig(IConfiguration configuration)
+            {
+                _configuration = configuration;
+            }
+
             public void ConfigureServices(IServiceCollection services)
             {
                 services.AddTransient<ExampleInterface, ExampleImplementation>();
