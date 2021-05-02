@@ -5,8 +5,6 @@ namespace DepTree.Diagrams
 {
     public class yUML
     {
-        public static string Create(params DependencyTreeNode[] nodes) => Create(nodes);
-
         public static string Create(IList<DependencyTreeNode> nodes)
         {
             var builder = new StringBuilder(@"// {type:class}

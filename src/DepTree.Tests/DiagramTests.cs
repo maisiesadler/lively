@@ -17,7 +17,7 @@ namespace DepTree.Tests
             var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithDeps";
 
             var depTree = DependencyTree.Create(config, fullTypeName);
-            var diagram = yUML.Create(depTree);
+            var diagram = yUML.Create(new[] { depTree });
 
             var expected = @"// {type:class}
 // {direction:topDown}
@@ -36,7 +36,7 @@ namespace DepTree.Tests
             var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
 
             var depTree = DependencyTree.Create(config, fullTypeName);
-            var diagram = yUML.Create(depTree);
+            var diagram = yUML.Create(new[] { depTree });
 
             var expected = @"// {type:class}
 // {direction:topDown}
@@ -55,7 +55,7 @@ namespace DepTree.Tests
             var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
 
             var depTree = DependencyTree.Create(config, fullTypeName);
-            var diagram = yUML.Create(depTree, depTree);
+            var diagram = yUML.Create(new[] { depTree, depTree });
 
             var expected = @"// {type:class}
 // {direction:topDown}
