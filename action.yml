@@ -1,4 +1,4 @@
-name: 'Hello World'
+name: 'Generate UML dependencies'
 description: 'Generate UML'
 inputs:
   application-config-location:
