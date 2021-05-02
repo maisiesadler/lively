@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using DepTree.Diagrams;
 using Microsoft.Extensions.Configuration;
 
 namespace DepTree.Console
@@ -18,7 +20,9 @@ namespace DepTree.Console
             var config = new DependencyTreeConfig(ass, iconfiguration, skipAssemblies);
             var dt = DependencyTree.Create(config, "PropertyService.Api.Infrastructure.Controllers.Legacy.AddressService.AddressServiceController");
 
-            Print(dt);
+            var diagram = yUML.Create(dt);
+            File.WriteAllText("diagram.yuml", diagram);
+            // Print(dt);
         }
 
         private static void Print(DependencyTreeNode node, string indent = "")

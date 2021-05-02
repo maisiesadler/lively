@@ -73,7 +73,7 @@ namespace DepTree.Tests
             var assembly = this.GetType().Assembly;
             var cfgBuilder = new ConfigurationBuilder();
             var iconfiguration = cfgBuilder.Build();
-            var config = new DependencyTreeConfig(assembly, iconfiguration, startupName:  "StartupWithConfig");
+            var config = new DependencyTreeConfig(assembly, iconfiguration, startupName: "StartupWithConfig");
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithInterfaceDeps";
 
             var depTree = DependencyTree.Create(config, fullTypeName);
@@ -90,6 +90,44 @@ namespace DepTree.Tests
             Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleInterface", childdep.Type.FullName);
             Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleImplementation", childdep.Implementation.FullName);
             Assert.Empty(childdep.Children);
+        }
+
+        [Fact]
+        public void GenericDependency()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
+            var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithGenericDeps";
+
+            var depTree = DependencyTree.Create(config, fullTypeName);
+
+            Assert.NotNull(depTree);
+            Assert.Null(depTree.Error);
+            Assert.Equal("root", depTree.Name);
+            Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleTypeWithGenericDeps", depTree.Type.FullName);
+            var childdep = Assert.Single(depTree.Children);
+
+            Assert.NotNull(childdep);
+            Assert.Equal("example", childdep.Name);
+            Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleType`1", childdep.Type.FullName);
+            Assert.Equal("ExampleType`1", childdep.Type.Name);
+            Assert.Empty(childdep.Children);
+        }
+
+        [Fact]
+        public void UnknownGenericDependencyIsResolved()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
+            var fullTypeName = "UnloadedLibrary.GenericTypeName`1[[UnloadedLibrary.GenericParameter, UnloadedLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]";
+
+            var depTree = DependencyTree.Create(config, fullTypeName);
+
+            Assert.NotNull(depTree);
+            Assert.Equal("root", depTree.Name);
+            Assert.Equal("UnloadedLibrary.GenericTypeName`1", depTree.Type.FullName);
+            Assert.Equal("GenericTypeName`1", depTree.Type.Name);
+            Assert.Null(depTree.Children);
         }
 
         public class ExampleTypeWithDeps
@@ -117,6 +155,18 @@ namespace DepTree.Tests
         }
 
         public class ExampleImplementation : ExampleInterface
+        {
+        }
+
+        public class ExampleTypeWithGenericDeps
+        {
+            public ExampleTypeWithGenericDeps(ExampleType<string> example)
+            {
+
+            }
+        }
+
+        public class ExampleType<T>
         {
         }
 

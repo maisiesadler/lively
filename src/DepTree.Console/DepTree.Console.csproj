@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DepTree\DepTree.csproj" />
+    <ProjectReference Include="..\DepTree.Diagrams\DepTree.Diagrams.csproj" />
   </ItemGroup>
 
   <ItemGroup>

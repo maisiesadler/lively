@@ -4,12 +4,19 @@ namespace DepTree.TypeDescriptions
 {
     public class ConcreteTypeDescription : ITypeDescription
     {
-        public string FullName => _type.FullName;
+        public string FullName { get; }
+        public string Name { get; }
 
-        public string Name => _type.Name;
+        public ConcreteTypeDescription(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
 
-        private readonly Type _type;
-
-        public ConcreteTypeDescription(Type type) => _type = type ?? throw new ArgumentNullException(nameof(type));
+            var t = type.IsGenericType
+                ? type.GetGenericTypeDefinition()
+                : type;
+            
+            FullName = t.FullName;
+            Name = t.Name;
+        }
     }
 }
