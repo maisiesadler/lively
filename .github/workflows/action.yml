@@ -1,0 +1,22 @@
+name: 'Hello World'
+description: 'Generate UML'
+inputs:
+  application-config-location:
+    description: 'Application config location'
+    required: true
+  assembly-location:
+    description: 'Assembly location'
+    required: true
+  assembly-config-location:
+    description: 'Assembly config location'
+    required: true
+outputs:
+  uml:
+    description: 'The UML'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.application-config-location }}
+    - ${{ inputs.assembly-location }}
+    - ${{ inputs.assembly-config-location }}
