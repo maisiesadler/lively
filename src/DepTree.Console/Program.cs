@@ -23,13 +23,17 @@ namespace DepTree.Console
 
         private static void Print(DependencyTreeNode node, string indent = "")
         {
-            System.Console.WriteLine($"{indent}{node.Name} - {node.Type?.FullName}");
+            System.Console.WriteLine($"{indent}{node.Name}");
+            if (!string.IsNullOrWhiteSpace(node.Type?.FullName))
+                System.Console.WriteLine($"{indent} - {node.Type?.FullName}");
+            if (!string.IsNullOrWhiteSpace(node.Implementation?.FullName))
+                System.Console.WriteLine($"{indent} - Implementation: {node.Implementation?.FullName}");
             if (node.Error != null)
             {
                 System.Console.WriteLine($"{indent} Error - {node.Error}");
                 return;
             }
-            var childindent = indent + "  ";
+            var childindent = "  " + indent;
             foreach (var c in node.Children)
             {
                 Print(c, childindent);

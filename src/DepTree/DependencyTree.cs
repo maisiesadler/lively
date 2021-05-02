@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using DepTree.TypeDescriptions;
 
 namespace DepTree
 {
@@ -14,8 +15,10 @@ namespace DepTree
             var type = config.Assembly.GetType(typeName);
             if (type == null)
             {
-                return new DependencyTreeNode(name, type, DependencyTreeError.UnknownType);
+                var td = new UnknownTypeDescription(typeName);
+                return new DependencyTreeNode(name, td, DependencyTreeError.UnknownType);
             }
+            var typeDescription = new ConcreteTypeDescription(type);
 
             if (type.IsInterface)
             {
@@ -23,21 +26,23 @@ namespace DepTree
 
                 if (implementation == null)
                 {
-                    return new DependencyTreeNode(name, type, DependencyTreeError.NoImplementation);
+                    return new DependencyTreeNode(name, typeDescription, DependencyTreeError.NoImplementation);
                 }
+
+                var implTypeDescription = new ConcreteTypeDescription(implementation);
 
                 var (ch, err) = FindChildrenForType(config, implementation, depth);
                 if (err != null)
-                    return new DependencyTreeNode(name, type, implementation, err.Value);
+                    return new DependencyTreeNode(name, typeDescription, implTypeDescription, err.Value);
 
-                return new DependencyTreeNode(name, type, implementation, ch);
+                return new DependencyTreeNode(name, typeDescription, implTypeDescription, ch);
             }
 
             var (children, error) = FindChildrenForType(config, type, depth);
             if (error != null)
-                return new DependencyTreeNode(name, type, error.Value);
+                return new DependencyTreeNode(name, typeDescription, error.Value);
 
-            return new DependencyTreeNode(name, type, children);
+            return new DependencyTreeNode(name, typeDescription, children);
         }
 
         private static (List<DependencyTreeNode>, DependencyTreeError?) FindChildrenForType(DependencyTreeConfig config, Type type, int depth)
