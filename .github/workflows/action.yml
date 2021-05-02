@@ -1,5 +1,7 @@
 name: 'Hello World'
 description: 'Generate UML'
+on: push
+
 inputs:
   application-config-location:
     description: 'Application config location'
