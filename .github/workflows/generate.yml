@@ -1,0 +1,20 @@
+name: Generate dependency diagram
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  dockerbuild:
+    name: Docker build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Docker build
+        shell: bash
+        run: docker build .
+
+      - name: Generate UML dependencies
+        uses: maisiesadler/deptree@0.0.2
