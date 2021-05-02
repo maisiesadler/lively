@@ -6,15 +6,19 @@ on:
 
 jobs:
   dockerbuild:
-    name: Docker build and test
+    name: Generate dependency diagram
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v1
 
-      - name: Docker build
+      - name: Docker build assembly
         shell: bash
-        run: docker build .
+        run: |
+          docker build -t deptree .
+          id=$(docker create deptree)
+          docker cp $id:/app/DepTree.Console.dll - > DepTree.Console.dll
+          docker rm -v $id
 
       - name: Generate UML dependencies
         uses: maisiesadler/deptree@0.0.2
