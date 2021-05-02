@@ -18,11 +18,11 @@ namespace DepTree.Console
             var iconfiguration = cfgBuilder.Build();
             var skipAssemblies = new HashSet<string> { "Serilog.IDiagnosticContext" };
             var config = new DependencyTreeConfig(ass, iconfiguration, skipAssemblies);
-            var dt = DependencyTree.Create(config, "PropertyService.Api.Infrastructure.Controllers.Legacy.AddressService.AddressServiceController");
+            var dt1 = DependencyTree.Create(config, "PropertyService.Api.Infrastructure.Controllers.Legacy.AddressService.AddressServiceController");
+            var dt2 = DependencyTree.Create(config, "PropertyService.Api.Infrastructure.Controllers.Property.PropertyController");
 
-            var diagram = yUML.Create(dt);
+            var diagram = yUML.Create(dt1, dt2);
             File.WriteAllText("diagram.yuml", diagram);
-            // Print(dt);
         }
 
         private static void Print(DependencyTreeNode node, string indent = "")

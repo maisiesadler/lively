@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using DepTree.Diagrams;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -6,6 +7,8 @@ namespace DepTree.Tests
 {
     public class DiagramTests
     {
+        private static Regex _whitespace = new Regex("\\s+");
+
         [Fact]
         public void CanCreateDiagramForSimpleDependency()
         {
@@ -42,6 +45,31 @@ namespace DepTree.Tests
 [ExampleTypeWithInterfaceDeps]->[ExampleInterface|ExampleImplementation]";
 
             Assert.Equal(expected.Trim(), diagram.Trim());
+        }
+
+        [Fact]
+        public void MultipleRegistrationsDedupedAndNoted()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly, startupName: "DepTree.Tests.DiagramTests+Startup");
+            var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
+
+            var depTree = DependencyTree.Create(config, fullTypeName);
+            var diagram = yUML.Create(depTree, depTree);
+
+            var expected = @"// {type:class}
+// {direction:topDown}
+// {generate:true}
+
+[ExampleTypeWithInterfaceDeps]-2>[ExampleInterface|ExampleImplementation]
+";
+
+            Assert.Equal(Normalise(expected), Normalise(diagram));
+        }
+
+        private static string Normalise(string s)
+        {
+            return _whitespace.Replace(s, " ");
         }
 
         public class ExampleTypeWithDeps
