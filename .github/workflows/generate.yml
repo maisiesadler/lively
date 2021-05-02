@@ -25,4 +25,4 @@ jobs:
         run: ls
 
       - name: Generate UML dependencies
-        uses: maisiesadler/deptree@0.0.4
+        uses: maisiesadler/deptree@0.0.5
