@@ -19,9 +19,13 @@ namespace DepTree.Diagrams
 
         private static void AddAllNodes(StringBuilder builder, DependencyTreeNode node)
         {
+            if (node.Children == null) return;
+
             foreach (var child in node.Children)
             {
-                builder.AppendLine($"[{node.Type?.Name}]->[{child.Type?.Name}]");
+                var childname = child.Type?.Name;
+                if (child.Implementation != null) childname += "|" + child.Implementation.Name;
+                builder.AppendLine($"[{node.Type?.Name}]->[{childname}]");
 
                 AddAllNodes(builder, child);
             }

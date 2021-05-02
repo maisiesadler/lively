@@ -25,6 +25,25 @@ namespace DepTree.Tests
             Assert.Equal(expected.Trim(), diagram.Trim());
         }
 
+        [Fact]
+        public void CanCreateDiagramForDependencyWithImplementation()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly, startupName: "DepTree.Tests.DiagramTests+Startup");
+            var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
+
+            var depTree = DependencyTree.Create(config, fullTypeName);
+            var diagram = yUML.Create(depTree);
+
+            var expected = @"// {type:class}
+// {direction:topDown}
+// {generate:true}
+
+[ExampleTypeWithInterfaceDeps]->[ExampleInterface|ExampleImplementation]";
+
+            Assert.Equal(expected.Trim(), diagram.Trim());
+        }
+
         public class ExampleTypeWithDeps
         {
             public ExampleTypeWithDeps(ExampleType example)

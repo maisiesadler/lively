@@ -15,7 +15,11 @@ namespace DepTree.Resolvers
             if (config == null) throw new ArgumentNullException(nameof(config));
             if (config.Assembly == null) throw new ArgumentNullException(nameof(config.Assembly));
 
-            var startupType = config.Assembly.GetTypes().FirstOrDefault(x => x.Name == config.StartupName);
+            var startupType = config.Assembly.GetTypes().FirstOrDefault(x => x.FullName == config.StartupName);
+            if (startupType == null)
+            {
+                startupType = config.Assembly.GetTypes().FirstOrDefault(x => x.Name == config.StartupName);
+            }
             if (startupType == null)
             {
                 throw new Exception("Could not find Startup in assembly");
