@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 
 namespace DepTree.TypeDescriptions
 {
@@ -6,6 +6,14 @@ namespace DepTree.TypeDescriptions
     {
         public string FullName { get; }
 
-        public UnknownTypeDescription(string fullName) => FullName = fullName;
+        public string Name { get; }
+
+        public UnknownTypeDescription(string fullName)
+        {
+            FullName = fullName;
+            Name = string.IsNullOrWhiteSpace(fullName)
+                ? string.Empty
+                : fullName.Split('.', '+').Last();
+        }
     }
 }
