@@ -10,36 +10,33 @@ namespace DepTree.Resolvers
     {
         private readonly FakeServiceCollection _fakeServiceCollection;
 
-        public StartupInterfaceResolver(Assembly assembly, HashSet<string> skipAssemblies, string startupName)
+        public StartupInterfaceResolver(StartupInterfaceResolverConfig config)
         {
-            var startupType = assembly.GetTypes().FirstOrDefault(x => x.Name == startupName);
+            if (config == null) throw new ArgumentNullException(nameof(config));
+            if (config.Assembly == null) throw new ArgumentNullException(nameof(config.Assembly));
+
+            var startupType = config.Assembly.GetTypes().FirstOrDefault(x => x.Name == config.StartupName);
             if (startupType == null)
             {
                 throw new Exception("Could not find Startup in assembly");
             }
 
-            var startup = Activator.CreateInstance(startupType);
+            var startup = CreateInstance(startupType, config.Configuration);
             MethodInfo method = startupType.GetMethod("ConfigureServices");
             _fakeServiceCollection = new FakeServiceCollection();
             method.Invoke(startup, new[] { _fakeServiceCollection });
 
-            SkipAssemblies = skipAssemblies;
+            SkipAssemblies = config.SkipAssemblies;
         }
 
-        public StartupInterfaceResolver(Assembly assembly, IConfiguration configuration, HashSet<string> skipAssemblies, string startupName)
+        private object CreateInstance(Type startupType, IConfiguration configuration)
         {
-            var startupType = assembly.GetTypes().FirstOrDefault(x => x.Name == startupName);
-            if (startupType == null)
+            if (configuration == null)
             {
-                throw new Exception("Could not find Startup in assembly");
+                return Activator.CreateInstance(startupType);
             }
 
-            var startup = Activator.CreateInstance(startupType, configuration);
-            MethodInfo method = startupType.GetMethod("ConfigureServices");
-            _fakeServiceCollection = new FakeServiceCollection();
-            method.Invoke(startup, new[] { _fakeServiceCollection });
-
-            SkipAssemblies = skipAssemblies;
+            return Activator.CreateInstance(startupType, configuration);
         }
 
         public HashSet<string> SkipAssemblies { get; }

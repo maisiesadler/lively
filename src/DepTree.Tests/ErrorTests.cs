@@ -1,4 +1,5 @@
 using System;
+using DepTree.TypeDescriptions;
 using Xunit;
 
 namespace DepTree.Tests
@@ -16,7 +17,8 @@ namespace DepTree.Tests
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);
-            Assert.Null(depTree.Type);
+            var typeDescription = Assert.IsType<UnknownTypeDescription>(depTree.Type);
+            Assert.Equal("Nonsense", typeDescription.FullName);
             Assert.Equal(DependencyTreeError.UnknownType, depTree.Error);
             Assert.Null(depTree.Children);
         }
