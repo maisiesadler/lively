@@ -1,0 +1,1 @@
+![](http://yuml.me/diagram/scruffy/class/[DependencyTree]->[DependencyTreeConfig], [DependencyTreeConfig]->[Assembly], [DependencyTreeConfig]->[IConfiguration], [DependencyTreeConfig]->[HashSet`1], [DependencyTreeConfig]->[String] "yUML")
