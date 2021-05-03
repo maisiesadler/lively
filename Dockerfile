@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 as build-env
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build-env
 
 COPY . ./
-RUN dotnet publish ./DepTree.Console/DepTree.Console.csproj -c Release -o out --no-self-contained
+RUN dotnet publish ./src/DepTree.Console/DepTree.Console.csproj -c Release -o out --no-self-contained
 
 # Label the container
 LABEL maintainer="Maisie Sadler <maisie.sadler>"
@@ -13,6 +13,6 @@ LABEL com.github.actions.description="The description of your GitHub Action."
 LABEL com.github.actions.icon="activity"
 LABEL com.github.actions.color="orange"
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal
 COPY --from=build-env /out .
 ENTRYPOINT [ "dotnet", "/DepTree.Console.dll" ]
