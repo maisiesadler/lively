@@ -16,9 +16,13 @@ jobs:
       env:
           NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
 
+    - name: 'Print version'
+      run: |
+        echo 'Creating package version 0.0.${{github.run_number}}'
+
     - name: Test
       run: dotnet test
-      working-directory: ./src/DepTree.Test
+      working-directory: ./src/DepTree.Tests
 
     - name: Build project
       run: dotnet build -c Release
