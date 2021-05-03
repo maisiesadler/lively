@@ -13,8 +13,7 @@ ARG VERSION=1.0.0
 RUN dotnet restore deptree.sln
 COPY . .
 RUN dotnet build -c Release /property:Version=$VERSION --no-restore && \
-  dotnet test src/DepTree.Tests/DepTree.Tests.csproj -c Release --no-restore --no-build && \
-  dotnet publish src/DepTree.Console/DepTree.Console.csproj -c Release -o /build/publish -r linux-x64 -p:PublishSingleFile=true --self-contained true --no-restore --no-build
+  dotnet publish src/DepTree.Console/DepTree.Console.csproj -c Release -o /build/publish --no-restore --no-build
 
 FROM base AS final
 WORKDIR /app
