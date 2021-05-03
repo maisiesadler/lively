@@ -1,8 +1,6 @@
 #!/bin/bash
 
-echo $ASSEMBLY_LOCATION
-
-result=$(dotnet /DepTree.Console.dll)
+result=$(dotnet /DepTree.Console.dll $APPLICATION_CONFIG_LOCATION $ASSEMBLY_LOCATION)
 
 r=$?
 if [ $r -ne 0 ]; then
