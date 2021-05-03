@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal AS base
+FROM mcr.microsoft.com/dotnet/runtime:5.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as build
 WORKDIR /build
 COPY deptree.sln .
 COPY src/DepTree/DepTree.csproj src/DepTree/
@@ -14,7 +14,7 @@ RUN dotnet restore deptree.sln
 COPY . .
 RUN dotnet build -c Release /property:Version=$VERSION --no-restore && \
   dotnet test src/DepTree.Tests/DepTree.Tests.csproj -c Release --no-restore --no-build && \
-  dotnet publish src/DepTree.Console/DepTree.Console.csproj -c Release -o /build/publish --no-restore --no-build
+  dotnet publish src/DepTree.Console/DepTree.Console.csproj -c Release -o /build/publish -r linux-x64 -p:PublishSingleFile=true --self-contained true --no-restore --no-build
 
 FROM base AS final
 WORKDIR /app
