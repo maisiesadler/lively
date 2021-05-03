@@ -12,6 +12,7 @@ namespace DepTree
         public string StartupName { get; }
         public IConfiguration Configuration { get; set; }
         public HashSet<string> SkipAssemblies { get; set; }
+        public InterfaceResolverType InterfaceResolverType { get; set; } = InterfaceResolverType.Startup;
 
         public DependencyTreeConfig(Assembly assembly, IConfiguration configuration = null, HashSet<string> skipAssemblies = null, string startupName = "Startup")
         {

@@ -13,7 +13,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "Nonsense";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);
@@ -31,7 +32,8 @@ namespace DepTree.Tests
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);
@@ -47,7 +49,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.ErrorTests+ExampleWithErrorDep";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);

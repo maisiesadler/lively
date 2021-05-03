@@ -3,7 +3,6 @@
     "Serilog.IDiagnosticContext"
   ],
   "Generate": [
-    "PropertyService.Api.Infrastructure.Controllers.Legacy.AddressService.AddressServiceController",
-    "PropertyService.Api.Infrastructure.Controllers.Property.PropertyController"
+    "DepTree.DependencyTree"
   ]
 }

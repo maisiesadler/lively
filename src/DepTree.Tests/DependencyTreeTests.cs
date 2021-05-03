@@ -14,7 +14,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleType";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -30,7 +31,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithDeps";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -51,7 +53,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithInterfaceDeps";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -76,7 +79,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly, iconfiguration, startupName: "StartupWithConfig");
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithInterfaceDeps";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -99,7 +103,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithGenericDeps";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Null(depTree.Error);
@@ -121,7 +126,8 @@ namespace DepTree.Tests
             var config = new DependencyTreeConfig(assembly);
             var fullTypeName = "UnloadedLibrary.GenericTypeName`1[[UnloadedLibrary.GenericParameter, UnloadedLibrary, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]";
 
-            var depTree = DependencyTree.Create(config, fullTypeName);
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
 
             Assert.NotNull(depTree);
             Assert.Equal("root", depTree.Name);

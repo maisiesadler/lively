@@ -11,20 +11,21 @@ namespace DepTree
         public Assembly Assembly { get; }
         public IInterfaceResolver InterfaceResolver { get; }
 
-        internal DependencyTree(DependencyTreeConfig config)
+        public DependencyTree(DependencyTreeConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
             Assembly = config.Assembly ?? throw new ArgumentNullException(nameof(config.Assembly));
-            InterfaceResolver = new StartupInterfaceResolver(config.StartupConfig);
+            InterfaceResolver = config.InterfaceResolverType == InterfaceResolverType.None
+                ? new NoInterfaceResolver()
+                : new StartupInterfaceResolver(config.StartupConfig);
         }
 
-        public static DependencyTreeNode Create(DependencyTreeConfig config, string typeName, string name = "root")
+        public DependencyTreeNode GetDependencies(string typeName, string name = "root")
         {
-            var tree = new DependencyTree(config);
-            return tree.GetDependencies(typeName, name);
+            return GetDependencies(typeName, name, 0);
         }
 
-        private DependencyTreeNode GetDependencies(string typeName, string name, int depth = 0)
+        private DependencyTreeNode GetDependencies(string typeName, string name, int depth)
         {
             var type = Assembly.GetType(typeName);
             if (type == null)

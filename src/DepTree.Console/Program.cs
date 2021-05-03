@@ -26,7 +26,12 @@ namespace DepTree.Console
                 return -1;
             }
 
-            var applicationConfig = JsonSerializer.Deserialize<ApplicationConfig>(File.ReadAllText(configLocation));
+            var (applicationConfig, ok) = ReadConfig(configLocation);
+            if (!ok)
+            {
+                System.Console.WriteLine($"Application Config at '{configLocation}' not valid'. {expectedArgs}");
+                return -1;
+            }
 
             var assemblyLocation = args[1];
             if (!File.Exists(assemblyLocation))
@@ -35,34 +40,55 @@ namespace DepTree.Console
                 return -1;
             }
 
-            var assemblyConfigLocation = args[2];
-            var iconfiguration = BuildConfiguration(assemblyConfigLocation);
+            var iconfiguration = TryBuildConfiguration(args);
 
             var ass = Assembly.LoadFrom(assemblyLocation);
             var config = new DependencyTreeConfig(ass, iconfiguration, skipAssemblies: applicationConfig.Skip);
+            config.InterfaceResolverType = Resolvers.InterfaceResolverType.None;
 
             var nodes = new List<DependencyTreeNode>();
+            var tree = new DependencyTree(config);
             foreach (var classname in applicationConfig.Generate)
             {
-                var dt = DependencyTree.Create(config, "PropertyService.Api.Infrastructure.Controllers.Legacy.AddressService.AddressServiceController");
-                nodes.Add(dt);
+                var node = tree.GetDependencies(classname);
+                nodes.Add(node);
             }
 
             var diagram = yUML.Create(nodes);
-            System.Console.WriteLine(diagram);
+            File.WriteAllText("DependencyTree.yuml", diagram);
+
+            // for debugging
+            // Print(nodes[0]);
+
             return 0;
         }
 
-        private static IConfiguration BuildConfiguration(string assemblyConfigLocation)
+        private static IConfiguration TryBuildConfiguration(string[] args)
         {
-            if (assemblyConfigLocation != null && File.Exists(assemblyConfigLocation))
+            if (args.Length > 2
+              && args[2] is string configLocation
+              && File.Exists(configLocation))
             {
                 var cfgBuilder = new ConfigurationBuilder();
-                cfgBuilder.AddJsonFile(assemblyConfigLocation, optional: false, reloadOnChange: false);
+                cfgBuilder.AddJsonFile(configLocation, optional: false, reloadOnChange: false);
                 return cfgBuilder.Build();
             }
 
             return null;
+        }
+
+        private static (ApplicationConfig, bool) ReadConfig(string configLocation)
+        {
+            try
+            {
+                var configContents = File.ReadAllText(configLocation);
+                return (JsonSerializer.Deserialize<ApplicationConfig>(configContents), true);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"Could not read config. Exception: {ex.Message}.");
+                return (null, false);
+            }
         }
 
         private static void Print(DependencyTreeNode node, string indent = "")
