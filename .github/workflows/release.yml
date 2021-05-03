@@ -26,7 +26,6 @@ jobs:
 
     - name: Build project
       run: dotnet build -c Release
-      working-directory: ./src/DepTree
 
     - name: Generate a NuGet package
       run: dotnet pack --no-build -c Release -o . /p:PackageVersion=0.0.${{github.run_number}}
