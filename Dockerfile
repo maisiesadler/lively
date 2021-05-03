@@ -21,4 +21,4 @@ ENV APPLICATION_CONFIG_LOCATION=$APPLICATION_CONFIG_LOCATION
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal
 COPY --from=build-env /out .
 COPY --from=build-env ./runindocker.sh ./runindocker.sh
-ENTRYPOINT [ "ls", "-a" ]
+ENTRYPOINT [ "./runindocker.sh" ]
