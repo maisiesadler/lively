@@ -55,7 +55,7 @@ namespace DepTree.Console
             }
 
             var diagram = yUMLmd.Create(nodes);
-            File.WriteAllText("DependencyTree.mg", diagram);
+            File.WriteAllText("DependencyTree.md", diagram);
 
             // for debugging
             // Print(nodes[0]);
