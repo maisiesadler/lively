@@ -1,0 +1,41 @@
+name: Release Nuget Package
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+      with:
+          source-url: https://api.nuget.org/v3/index.json
+      env:
+          NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
+
+    - name: Test
+      run: dotnet test
+      working-directory: ./src/DepTree.Test
+
+    - name: Build project
+      run: dotnet build -c Release
+      working-directory: ./src/DepTree
+
+    - name: Generate a NuGet package
+      run: dotnet pack --no-build -c Release -o . /p:PackageVersion=0.0.${{github.run_number}}
+      working-directory: ./src/DepTree
+
+    - name: Push to GitHub package registry
+      run: dotnet nuget push *.nupkg --api-key ${{secrets.NUGET_AUTH_TOKEN}}
+      working-directory: ./src/DepTree
+
+    - name: Generate a NuGet package
+      run: dotnet pack --no-build -c Release -o . /p:PackageVersion=0.0.${{github.run_number}}
+      working-directory: ./src/DepTree.Diagrams
+
+    - name: Push to GitHub package registry
+      run: dotnet nuget push *.nupkg --api-key ${{secrets.NUGET_AUTH_TOKEN}}
+      working-directory: ./src/DepTree.Diagrams
