@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo $ASSEMBLY_LOCATION
+
 result=$(dotnet /DepTree.Console.dll)
 
 r=$?
