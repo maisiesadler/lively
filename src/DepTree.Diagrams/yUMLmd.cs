@@ -21,17 +21,17 @@ namespace DepTree.Diagrams
                 {
                     if (count == 1)
                     {
-                        builder.Add($"[{nodeName}]->[{childname}]");
+                        builder.Add($"[{nodeName}]-&gt;[{childname}]");
                     }
                     else
                     {
-                        builder.Add($"[{nodeName}]-{count}>[{childname}]");
+                        builder.Add($"[{nodeName}]-{count}&gt;[{childname}]");
                     }
                 }
             }
 
             var img = string.Join(", ", builder);
-            return $"![](http://yuml.me/diagram/scruffy/class/{img} \"yUML\")";
+            return $"<img src=\"http://yuml.me/diagram/scruffy/class/{img}\" />";
         }
 
         private static void AddAllNodes(Dictionary<string, Dictionary<string, int>> relationships, DependencyTreeNode node)
