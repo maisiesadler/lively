@@ -14,7 +14,7 @@ inputs:
     description: 'Assembly config location'
     required: true
 outputs:
-  uml:
+  result:
     description: 'The UML'
 runs:
   using: 'docker'
