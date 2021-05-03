@@ -1,20 +1,18 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal AS base
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:5.0 as build-env
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
-WORKDIR /build
-COPY deptree.sln .
-COPY src/DepTree/DepTree.csproj src/DepTree/
-COPY src/DepTree.Console/DepTree.Console.csproj src/DepTree.Console/
-COPY src/DepTree.Diagrams/DepTree.Diagrams.csproj src/DepTree.Diagrams/
-COPY src/DepTree.Tests/DepTree.Tests.csproj src/DepTree.Tests/
-ARG ASPNETCORE_ENVIRONMENT
-ARG VERSION=1.0.0
-RUN dotnet restore deptree.sln
-COPY . .
-RUN dotnet build -c Release /property:Version=$VERSION --no-restore && \
-  dotnet publish src/DepTree.Console/DepTree.Console.csproj -c Release -o /build/publish --no-restore --no-build
+COPY . ./
+RUN dotnet publish ./DepTree.Console/DepTree.Console.csproj -c Release -o out --no-self-contained
 
-FROM base AS final
-WORKDIR /app
-ENTRYPOINT ["dotnet", "DepTree.Console.dll"]
+# Label the container
+LABEL maintainer="Maisie Sadler <maisie.sadler>"
+LABEL repository="https://github.com/maisiesadler/deptree"
+LABEL homepage="https://github.com/maisiesadler/deptree"
+
+LABEL com.github.actions.name="The name of your GitHub Action"
+LABEL com.github.actions.description="The description of your GitHub Action."
+LABEL com.github.actions.icon="activity"
+LABEL com.github.actions.color="orange"
+
+FROM mcr.microsoft.com/dotnet/sdk:5.0
+COPY --from=build-env /out .
+ENTRYPOINT [ "dotnet", "/DepTree.Console.dll" ]
