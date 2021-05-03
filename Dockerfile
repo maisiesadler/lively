@@ -16,4 +16,4 @@ LABEL com.github.actions.color="orange"
 FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal
 COPY --from=build-env /out .
 COPY --from=build-env ./runindocker.sh ./runindocker.sh
-ENTRYPOINT [ "./runindocker.sh" ]
+ENTRYPOINT [ "ls" ]
