@@ -1,9 +1,5 @@
 #!/bin/bash
 
-echo $ASSEMBLY_LOCATION
-
-echo 'running'
-
 result=$(dotnet /DepTree.Console.dll \
   -a $ASSEMBLY_LOCATION \
   --config $APPLICATION_CONFIG_LOCATION \

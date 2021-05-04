@@ -58,8 +58,12 @@ namespace DepTree.Console.Configuration
             var parser = Parser.Default.ParseArguments<CommandLineInputs>(() => new(), args);
             parser.WithParsed(inputs =>
             {
-                AssemblyLocation = inputs.AssemblyLocation;
-                InterfaceResolver = inputs.InterfaceResolver;
+                System.Console.WriteLine("CLI inputs: " + JsonSerializer.Serialize(inputs));
+                if (!string.IsNullOrWhiteSpace(inputs.AssemblyLocation))
+                    AssemblyLocation = inputs.AssemblyLocation;
+
+                if (!string.IsNullOrWhiteSpace(inputs.InterfaceResolver))
+                    InterfaceResolver = inputs.InterfaceResolver;
 
                 if (!string.IsNullOrWhiteSpace(inputs.Type))
                 {
@@ -73,8 +77,10 @@ namespace DepTree.Console.Configuration
                     foreach (var s in skip) Skip.Add(s);
                 }
 
-                _assemblyConfigLocation = inputs.AssemblyConfigLocation;
-                _configLocation = inputs.ConfigLocation;
+                if (!string.IsNullOrWhiteSpace(inputs.AssemblyConfigLocation))
+                    _assemblyConfigLocation = inputs.AssemblyConfigLocation;
+                if (!string.IsNullOrWhiteSpace(inputs.ConfigLocation))
+                    _configLocation = inputs.ConfigLocation;
             });
         }
 
