@@ -1,6 +1,12 @@
 #!/bin/bash
 
-result=$(dotnet /DepTree.Console.dll $APPLICATION_CONFIG_LOCATION $ASSEMBLY_LOCATION)
+result=$(dotnet /DepTree.Console.dll \
+  -a $ASSEMBLY_LOCATION \
+  -p $APPLICATION_CONFIG_LOCATION \
+  -t $ROOT_TYPE \
+  -s $SKIP_TYPE \
+  -n $ASSEMBLY_CONFIG_LOCATION \
+  -i $INTERFACE_RESOLVER)
 
 r=$?
 if [ $r -ne 0 ]; then
