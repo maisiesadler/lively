@@ -1,8 +1,12 @@
 #!/bin/bash
 
+echo $ASSEMBLY_LOCATION
+
+echo 'running'
+
 result=$(dotnet /DepTree.Console.dll \
   -a $ASSEMBLY_LOCATION \
-  -p $APPLICATION_CONFIG_LOCATION \
+  --config $APPLICATION_CONFIG_LOCATION \
   -t $ROOT_TYPE \
   -s $SKIP_TYPE \
   -n $ASSEMBLY_CONFIG_LOCATION \
