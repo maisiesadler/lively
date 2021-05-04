@@ -35,7 +35,7 @@ jobs:
 
     - name: 'Print version'
       run: |
-        echo 'Creating package version ${{ needs.create-tag.outputs.new_version }}
+        echo 'Creating package version ${{ needs.create-tag.outputs.new_version }}'
 
     - name: Test
       run: dotnet test
