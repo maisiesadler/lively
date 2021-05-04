@@ -48,9 +48,24 @@ namespace DepTree.Console.Configuration
 
         private void ReadEnvironmentVariables()
         {
+            AssemblyLocation = Environment.GetEnvironmentVariable("ASSEMBLY_LOCATION");
             _assemblyConfigLocation = Environment.GetEnvironmentVariable("ASSEMBLY_CONFIG_LOCATION");
-            _configLocation = Environment.GetEnvironmentVariable("CONFIG_LOCATION");
+            _configLocation = Environment.GetEnvironmentVariable("APPLICATION_CONFIG_LOCATION");
             InterfaceResolver = Environment.GetEnvironmentVariable("INTERFACE_RESOLVER");
+
+            var rootType = Environment.GetEnvironmentVariable("ROOT_TYPE");
+            if (!string.IsNullOrWhiteSpace(rootType))
+            {
+                var types = rootType.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                Generate.AddRange(types);
+            }
+
+            var skipType = Environment.GetEnvironmentVariable("SKIP_TYPE");
+            if (!string.IsNullOrWhiteSpace(skipType))
+            {
+                var skip = skipType.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                foreach (var s in skip) Skip.Add(s);
+            }
         }
 
         private void TryReadArgs(string[] args)
@@ -58,7 +73,6 @@ namespace DepTree.Console.Configuration
             var parser = Parser.Default.ParseArguments<CommandLineInputs>(() => new(), args);
             parser.WithParsed(inputs =>
             {
-                System.Console.WriteLine("CLI inputs: " + JsonSerializer.Serialize(inputs));
                 if (!string.IsNullOrWhiteSpace(inputs.AssemblyLocation))
                     AssemblyLocation = inputs.AssemblyLocation;
 
