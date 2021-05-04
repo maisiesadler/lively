@@ -18,6 +18,8 @@ namespace DepTree.Console
 
             var assembly = Assembly.LoadFrom(applicationConfig.AssemblyLocation);
             var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration, skipAssemblies: applicationConfig.Skip);
+            if (applicationConfig.InterfaceResolver == "None")
+                config.InterfaceResolverType = Resolvers.InterfaceResolverType.None;
 
             var nodes = new List<DependencyTreeNode>();
             var tree = new DependencyTree(config);
