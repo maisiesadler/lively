@@ -10,7 +10,6 @@ namespace DepTree.Console
         static int Main(string[] args)
         {
             System.Console.WriteLine(args);
-
             var (applicationConfig, ok) = ApplicationConfiguration.Build(args);
             if (!ok)
             {
