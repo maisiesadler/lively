@@ -9,13 +9,15 @@ namespace DepTree.Console
     {
         static int Main(string[] args)
         {
-            System.Console.WriteLine(args);
+            // System.Console.WriteLine(string.Join(", ", args));
             var (applicationConfig, ok) = ApplicationConfiguration.Build(args);
             if (!ok)
             {
                 System.Console.WriteLine($"Application Config is not valid. {string.Join(", ", applicationConfig.Errors)}.");
                 return -1;
             }
+
+            // System.Console.WriteLine(JsonSerializer.Serialize(applicationConfig));
 
             var assembly = Assembly.LoadFrom(applicationConfig.AssemblyLocation);
             var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration, skipAssemblies: applicationConfig.Skip);

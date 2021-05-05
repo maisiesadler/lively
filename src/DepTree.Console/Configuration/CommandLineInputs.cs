@@ -14,20 +14,20 @@ namespace DepTree.Console.Configuration
             HelpText = "The location of the configuration file required to build IConfiguration for Startup")]
         public string AssemblyConfigLocation { get; set; } = null!;
 
-        [Option('t', "type",
+        [Option('t', "root-types",
             Required = false,
             HelpText = "The root type to use for the dependency tree, multiple values can be used as a csv input")]
-        public string Type { get; set; } = null!;
+        public string RootTypes { get; set; } = null!;
 
         [Option('c', "config",
             Required = false,
             HelpText = "The location of application config file")]
         public string ConfigLocation { get; set; } = null!;
 
-        [Option('s', "skip",
+        [Option('s', "skip-types",
             Required = false,
             HelpText = "Types to skip, multiple values can be used as a csv input")]
-        public string Skip { get; set; } = null!;
+        public string SkipTypes { get; set; } = null!;
 
         [Option('i', "interface-resolver",
             Required = false,
