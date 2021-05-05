@@ -1,9 +1,6 @@
 name: Release Nuget Package
 
-on:
-  push:
-    branches:
-      - '*'
+on: push
 
 jobs:
   create-tag:
@@ -23,7 +20,6 @@ jobs:
   createpackage:
     runs-on: ubuntu-latest
     needs: create-tag
-    if: github.ref == 'refs/head/main'
     env:
       VERSION: ${{ needs.create-tag.outputs.new_version }}
     
@@ -65,7 +61,7 @@ jobs:
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [create-tag]
+    needs: [create-tag, createpackage]
     steps:
       - name: Checkout code
         uses: actions/checkout@master
