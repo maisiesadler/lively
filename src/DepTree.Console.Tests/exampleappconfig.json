@@ -1,0 +1,9 @@
+{
+  "Skip": [
+    "Serilog.IDiagnosticContext"
+  ],
+  "Generate": [
+    "DepTree.DependencyTree",
+    "DepTree.AnotherRootType"
+  ]
+}

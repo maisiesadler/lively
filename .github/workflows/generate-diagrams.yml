@@ -16,7 +16,7 @@ jobs:
       run: dotnet build -c Release
 
     - name: Generate a NuGet package
-      run: dotnet run -p src/DepTree.Console applicationconfig.json ./src/DepTree/bin/Release/net5.0/DepTree.dll
+      run: dotnet run -p src/DepTree.Console --config applicationconfig.json -a ./src/DepTree/bin/Release/net5.0/DepTree.dll -i None
 
     - uses: EndBug/add-and-commit@v7
       with:
