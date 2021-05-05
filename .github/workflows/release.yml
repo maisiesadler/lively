@@ -20,7 +20,7 @@ jobs:
   createpackage:
     runs-on: ubuntu-latest
     needs: create-tag
-    if: github.ref == 'ref/head/main'
+    if: github.ref == 'refs/head/main'
     env:
       VERSION: ${{ needs.create-tag.outputs.new_version }}
     
