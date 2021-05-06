@@ -17,17 +17,19 @@ namespace DepTree.Console.Configuration
 
         public IConfiguration AssemblyConfiguration { get; private set; }
         public string AssemblyLocation { get; private set; }
-        public InterfaceResolverType InterfaceResolverType { get; private set; } = InterfaceResolverType.Startup;
         public HashSet<string> Skip { get; private set; } = new HashSet<string>();
         public List<string> Generate { get; private set; } = new List<string>();
         public List<string> Errors { get; private set; } = new List<string>();
+        public InterfaceResolverType InterfaceResolverType { get; private set; } = Resolvers.InterfaceResolverType.Startup;
+        public string StartupName { get; private set; } = "Startup";
+        public string OutputFormat { get; private set; } = "yumlmd";
         public bool IsValid => Errors.Count == 0;
 
-        public static (ApplicationConfiguration, bool) Build(string[] args)
+        public static (ApplicationConfiguration, bool) Build(IEnvironmentVariableProvider environmentVariableProvider, string[] args)
         {
             var config = new ApplicationConfiguration();
 
-            config.ReadEnvironmentVariables();
+            config.ReadEnvironmentVariables(environmentVariableProvider);
 
             config.TryReadArgs(args);
             config.TryReadFileConfig();
@@ -47,21 +49,23 @@ namespace DepTree.Console.Configuration
             }
         }
 
-        private void ReadEnvironmentVariables()
+        private void ReadEnvironmentVariables(IEnvironmentVariableProvider environmentVariableProvider)
         {
-            AssemblyLocation = Environment.GetEnvironmentVariable("ASSEMBLY_LOCATION");
-            _assemblyConfigLocation = Environment.GetEnvironmentVariable("ASSEMBLY_CONFIG_LOCATION");
-            _configLocation = Environment.GetEnvironmentVariable("APPLICATION_CONFIG_LOCATION");
-            TrySetInterfaceResolver(Environment.GetEnvironmentVariable("INTERFACE_RESOLVER"));
+            AssemblyLocation = environmentVariableProvider.GetEnvironmentVariable("ASSEMBLY_LOCATION");
+            _assemblyConfigLocation = environmentVariableProvider.GetEnvironmentVariable("ASSEMBLY_CONFIG_LOCATION");
+            _configLocation = environmentVariableProvider.GetEnvironmentVariable("APPLICATION_CONFIG_LOCATION");
+            StartupName = environmentVariableProvider.GetEnvironmentVariable("STARTUP_NAME");
+            TrySetInterfaceResolver(environmentVariableProvider.GetEnvironmentVariable("INTERFACE_RESOLVER"));
+            OutputFormat = environmentVariableProvider.GetEnvironmentVariable("OUTPUT_FORMAT");
 
-            var rootTypes = Environment.GetEnvironmentVariable("ROOT_TYPES");
+            var rootTypes = environmentVariableProvider.GetEnvironmentVariable("ROOT_TYPES");
             if (!string.IsNullOrWhiteSpace(rootTypes))
             {
                 var types = rootTypes.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
                 Generate.AddRange(types);
             }
 
-            var skipTypes = Environment.GetEnvironmentVariable("SKIP_TYPES");
+            var skipTypes = environmentVariableProvider.GetEnvironmentVariable("SKIP_TYPES");
             if (!string.IsNullOrWhiteSpace(skipTypes))
             {
                 var skip = skipTypes.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -79,6 +83,12 @@ namespace DepTree.Console.Configuration
 
                 if (!string.IsNullOrWhiteSpace(inputs.InterfaceResolver))
                     TrySetInterfaceResolver(inputs.InterfaceResolver);
+
+                if (!string.IsNullOrWhiteSpace(inputs.StartupName))
+                    StartupName = inputs.StartupName;
+
+                if (!string.IsNullOrWhiteSpace(inputs.OutputFormat))
+                    OutputFormat = inputs.OutputFormat;
 
                 if (!string.IsNullOrWhiteSpace(inputs.RootTypes))
                 {
@@ -137,9 +147,9 @@ namespace DepTree.Console.Configuration
         private void TrySetInterfaceResolver(string interfaceResolver)
         {
             if (interfaceResolver == "None")
-                InterfaceResolverType = InterfaceResolverType.None;
+                InterfaceResolverType = Resolvers.InterfaceResolverType.None;
             else if (interfaceResolver == "Startup")
-                InterfaceResolverType = InterfaceResolverType.Startup;
+                InterfaceResolverType = Resolvers.InterfaceResolverType.Startup;
         }
     }
 }

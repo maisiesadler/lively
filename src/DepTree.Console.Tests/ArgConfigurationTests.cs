@@ -4,14 +4,14 @@ using DepTree.Resolvers;
 
 namespace DepTree.Console.Tests
 {
-    public class ConfigurationTests
+    public class ArgConfigurationTests
     {
         [Fact]
         public void CanBuildApplicationConfigFromArgs()
         {
             var args = new[] { "-a", "assembly-location", "-t", "type", "-c", "config-location" };
 
-            var (config, ok) = ApplicationConfiguration.Build(args);
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
             var type = Assert.Single(config.Generate);
@@ -24,7 +24,7 @@ namespace DepTree.Console.Tests
         {
             var args = new[] { "-a", "assembly-location", "-t", "type", "-c", "config-location" };
 
-            var (config, ok) = ApplicationConfiguration.Build(args);
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.False(ok);
             Assert.Contains("Assembly Location 'assembly-location' is missing or invalid", config.Errors);
@@ -35,7 +35,7 @@ namespace DepTree.Console.Tests
         {
             var args = new[] { "-a", "assembly-location", "-c", "exampleappconfig.json" };
 
-            var (config, ok) = ApplicationConfiguration.Build(args);
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
             Assert.Equal(2, config.Generate.Count);
@@ -50,7 +50,7 @@ namespace DepTree.Console.Tests
         {
             var args = new[] { "-a", "assembly-location", "-t", "type1,type2" };
 
-            var (config, ok) = ApplicationConfiguration.Build(args);
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
             Assert.Equal(2, config.Generate.Count);
@@ -63,7 +63,7 @@ namespace DepTree.Console.Tests
         {
             var args = new[] { "-a", "assembly-location", "-s", "type1,type2" };
 
-            var (config, ok) = ApplicationConfiguration.Build(args);
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
             Assert.Equal(2, config.Skip.Count);
@@ -79,7 +79,7 @@ namespace DepTree.Console.Tests
         {
             var args = new[] { "-a", "assembly-location", "-i", interfaceResolver };
 
-            var (config, ok) = ApplicationConfiguration.Build(args);
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
             Assert.Equal(expectedType, config.InterfaceResolverType);
@@ -88,14 +88,36 @@ namespace DepTree.Console.Tests
         [Fact]
         public void AssemblyConfigurationIsRead()
         {
-            var args = new[] { "-a", "assembly-location", "-n", "testsettings.json" };
+            var args = new[] { "-a", "assembly-location", "--assembly-config", "testsettings.json" };
 
-            var (config, ok) = ApplicationConfiguration.Build(args);
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
             Assert.NotNull(config.AssemblyConfiguration);
             var defaultLogLevel = config.AssemblyConfiguration.GetSection("Logging:LogLevel:Default").Value;
             Assert.Equal("Information", defaultLogLevel);
+        }
+
+        [Fact]
+        public void CanSpecifyStartupNameOverride()
+        {
+            var args = new[] { "-a", "assembly-location", "--startup-name", "TestStartup" };
+
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
+
+            Assert.NotNull(config);
+            Assert.Equal("TestStartup", config.StartupName);
+        }
+
+        [Fact]
+        public void CanSpecifyOutputFormat()
+        {
+            var args = new[] { "-a", "assembly-location", "--output-format", "yuml" };
+
+            var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
+
+            Assert.NotNull(config);
+            Assert.Equal("yuml", config.OutputFormat);
         }
     }
 }

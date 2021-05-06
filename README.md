@@ -20,9 +20,11 @@ The GitHub action is defined [here](./acton.yml) and  uses the [Dockerfile](./Do
 | Assembly Location | `ASSEMBLY_LOCATION` | `-a` `--assembly` | The location of the assembly to read | Yes |
 | Root types | `ROOT_TYPES` | `-t` `--root-types` | The root type to use for the dependency tree, multiple values can be used as a csv input | Yes |
 | Skip types | `SKIP_TYPES` | `-s` `--skip-types` | Types to skip, multiple values can be used as a csv input | No |
-| Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `-n` `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
+| Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
 | Interface Resolver | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
-| Application Config Location | `APPLICATION_CONFIG_LOCATION` | `-n` `--assembly-config` | The location of application config file | No |
+| Startup Name | `STARTUP_NAME` | `--startup-name` | Startup Type Name or FullName. Default: Startup. | No |
+| Output Format | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: debug, yumlmd, yuml. Default: yuml. | No |
+| Application Config Location | `APPLICATION_CONFIG_LOCATION` | `-c` `--config` | The location of application config file | No |
 
 ### Application config
 

@@ -10,7 +10,8 @@ namespace DepTree.Console
         static int Main(string[] args)
         {
             // System.Console.WriteLine(string.Join(", ", args));
-            var (applicationConfig, ok) = ApplicationConfiguration.Build(args);
+            var envProvider = new EnvironmentVariableProvider();
+            var (applicationConfig, ok) = ApplicationConfiguration.Build(envProvider, args);
             if (!ok)
             {
                 System.Console.WriteLine($"Application Config is not valid. {string.Join(", ", applicationConfig.Errors)}.");
@@ -24,10 +25,7 @@ namespace DepTree.Console
             {
                 InterfaceResolverType = applicationConfig.InterfaceResolverType,
                 SkipAssemblies = applicationConfig.Skip,
-
-                // todo:
-                // StartupName = applicationConfig.StartupName,
-                // OutputFormat = applicationConfig.OutputFormat,
+                StartupName = applicationConfig.StartupName,
             };
 
             var nodes = new List<DependencyTreeNode>();
@@ -38,11 +36,24 @@ namespace DepTree.Console
                 nodes.Add(node);
             }
 
-            var diagram = yUMLmd.Create(nodes);
-            System.Console.WriteLine(diagram);
-
-            // for debugging
-            // Print(nodes[0]);
+            if (applicationConfig.OutputFormat == "yumlmd")
+            {
+                var diagram = yUMLmd.Create(nodes);
+                System.Console.WriteLine(diagram);
+            }
+            else if (applicationConfig.OutputFormat == "yuml")
+            {
+                var diagram = yUML.Create(nodes);
+                System.Console.WriteLine(diagram);
+            }
+            else
+            {
+                System.Console.WriteLine($"Got {nodes?.Count} nodes");
+                foreach (var node in nodes)
+                {
+                    Print(node);
+                }
+            }
 
             return 0;
         }

@@ -9,7 +9,7 @@ namespace DepTree.Console.Configuration
             HelpText = "The location of the assembly to read")]
         public string AssemblyLocation { get; set; } = null!;
 
-        [Option('n', "assembly-config",
+        [Option("assembly-config",
             Required = false,
             HelpText = "The location of the configuration file required to build IConfiguration for Startup")]
         public string AssemblyConfigLocation { get; set; } = null!;
@@ -33,5 +33,15 @@ namespace DepTree.Console.Configuration
             Required = false,
             HelpText = "Interface Resolver type to use, Allowed Values: None, Startup. Default: Startup.")]
         public string InterfaceResolver { get; set; } = null!;
+
+        [Option("startup-name",
+            Required = false,
+            HelpText = "Startup Type Name or FullName. Default: Startup.")]
+        public string StartupName { get; set; } = null!;
+
+        [Option("output-format",
+            Required = false,
+            HelpText = "Format to print out the result. Allowed values: debug, yumlmd, yuml. Default: yuml.")]
+        public string OutputFormat { get; set; } = null!;
     }
 }
