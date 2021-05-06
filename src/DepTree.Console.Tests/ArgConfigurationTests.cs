@@ -117,7 +117,7 @@ namespace DepTree.Console.Tests
             var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
-            Assert.Equal("yuml", config.OutputFormat);
+            Assert.Equal(OutputFormatType.Yuml, config.OutputFormat);
         }
     }
 }

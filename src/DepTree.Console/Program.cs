@@ -36,23 +36,27 @@ namespace DepTree.Console
                 nodes.Add(node);
             }
 
-            if (applicationConfig.OutputFormat == "yumlmd")
+            if (applicationConfig.OutputFormat == OutputFormatType.YumlMd)
             {
                 var diagram = yUMLmd.Create(nodes);
                 System.Console.WriteLine(diagram);
             }
-            else if (applicationConfig.OutputFormat == "yuml")
+            else if (applicationConfig.OutputFormat == OutputFormatType.Yuml)
             {
                 var diagram = yUML.Create(nodes);
                 System.Console.WriteLine(diagram);
             }
-            else
+            else if (applicationConfig.OutputFormat == OutputFormatType.Debug)
             {
                 System.Console.WriteLine($"Got {nodes?.Count} nodes");
                 foreach (var node in nodes)
                 {
                     Print(node);
                 }
+            }
+            else
+            {
+                System.Console.WriteLine($"OutputFormat '{applicationConfig.OutputFormat}' unknown");
             }
 
             return 0;

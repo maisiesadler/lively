@@ -133,18 +133,23 @@ namespace DepTree.Console.Tests
             Assert.Equal("TestStartup", config.StartupName);
         }
 
-        [Fact]
-        public void CanSpecifyOutputFormat()
+        [Theory]
+        [InlineData("yuml", OutputFormatType.Yuml)]
+        [InlineData("yumlmd", OutputFormatType.YumlMd)]
+        [InlineData("debug", OutputFormatType.Debug)]
+        [InlineData("beans", OutputFormatType.YumlMd)]
+        [InlineData("", OutputFormatType.YumlMd)]
+        public void CanSpecifyOutputFormat(string format, OutputFormatType expectedType)
         {
             var provider = new TestEnvironmentVariableProvider
             {
                 { "ASSEMBLY_LOCATION", "assembly-location" },
-                { "OUTPUT_FORMAT", "yuml" }
+                { "OUTPUT_FORMAT", format }
             };
             var (config, ok) = ApplicationConfiguration.Build(provider, new string[] { });
 
             Assert.NotNull(config);
-            Assert.Equal("yuml", config.OutputFormat);
+            Assert.Equal(expectedType, config.OutputFormat);
         }
     }
 }

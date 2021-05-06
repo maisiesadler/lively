@@ -22,7 +22,7 @@ namespace DepTree.Console.Configuration
         public List<string> Errors { get; private set; } = new List<string>();
         public InterfaceResolverType InterfaceResolverType { get; private set; } = Resolvers.InterfaceResolverType.Startup;
         public string StartupName { get; private set; } = "Startup";
-        public string OutputFormat { get; private set; } = "yumlmd";
+        public OutputFormatType OutputFormat { get; private set; } = OutputFormatType.YumlMd;
         public bool IsValid => Errors.Count == 0;
 
         public static (ApplicationConfiguration, bool) Build(IEnvironmentVariableProvider environmentVariableProvider, string[] args)
@@ -56,7 +56,7 @@ namespace DepTree.Console.Configuration
             _configLocation = environmentVariableProvider.GetEnvironmentVariable("APPLICATION_CONFIG_LOCATION");
             StartupName = environmentVariableProvider.GetEnvironmentVariable("STARTUP_NAME");
             TrySetInterfaceResolver(environmentVariableProvider.GetEnvironmentVariable("INTERFACE_RESOLVER"));
-            OutputFormat = environmentVariableProvider.GetEnvironmentVariable("OUTPUT_FORMAT");
+            TrySetOutputFormat(environmentVariableProvider.GetEnvironmentVariable("OUTPUT_FORMAT"));
 
             var rootTypes = environmentVariableProvider.GetEnvironmentVariable("ROOT_TYPES");
             if (!string.IsNullOrWhiteSpace(rootTypes))
@@ -88,7 +88,7 @@ namespace DepTree.Console.Configuration
                     StartupName = inputs.StartupName;
 
                 if (!string.IsNullOrWhiteSpace(inputs.OutputFormat))
-                    OutputFormat = inputs.OutputFormat;
+                    TrySetOutputFormat(inputs.OutputFormat);
 
                 if (!string.IsNullOrWhiteSpace(inputs.RootTypes))
                 {
@@ -144,12 +144,22 @@ namespace DepTree.Console.Configuration
             }
         }
 
-        private void TrySetInterfaceResolver(string interfaceResolver)
+        private void TrySetInterfaceResolver(string value)
         {
-            if (interfaceResolver == "None")
+            if (value == "None")
                 InterfaceResolverType = Resolvers.InterfaceResolverType.None;
-            else if (interfaceResolver == "Startup")
+            else if (value == "Startup")
                 InterfaceResolverType = Resolvers.InterfaceResolverType.Startup;
+        }
+
+        private void TrySetOutputFormat(string value)
+        {
+            if (value == "yumlmd")
+                OutputFormat = OutputFormatType.YumlMd;
+            else if (value == "yuml")
+                OutputFormat = OutputFormatType.Yuml;
+            else if (value == "debug")
+                OutputFormat = OutputFormatType.Debug;
         }
     }
 }
