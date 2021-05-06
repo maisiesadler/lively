@@ -76,7 +76,10 @@ namespace DepTree.Tests
             var assembly = this.GetType().Assembly;
             var cfgBuilder = new ConfigurationBuilder();
             var iconfiguration = cfgBuilder.Build();
-            var config = new DependencyTreeConfig(assembly, iconfiguration, startupName: "StartupWithConfig");
+            var config = new DependencyTreeConfig(assembly, iconfiguration)
+            {
+                StartupName = "StartupWithConfig",
+            };
             var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);

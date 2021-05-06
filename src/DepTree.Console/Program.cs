@@ -20,8 +20,15 @@ namespace DepTree.Console
             // System.Console.WriteLine(JsonSerializer.Serialize(applicationConfig));
 
             var assembly = Assembly.LoadFrom(applicationConfig.AssemblyLocation);
-            var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration, skipAssemblies: applicationConfig.Skip);
-            config.InterfaceResolverType = applicationConfig.InterfaceResolverType;
+            var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration)
+            {
+                InterfaceResolverType = applicationConfig.InterfaceResolverType,
+                SkipAssemblies = applicationConfig.Skip,
+
+                // todo:
+                // StartupName = applicationConfig.StartupName,
+                // OutputFormat = applicationConfig.OutputFormat,
+            };
 
             var nodes = new List<DependencyTreeNode>();
             var tree = new DependencyTree(config);

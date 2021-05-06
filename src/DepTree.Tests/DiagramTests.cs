@@ -33,7 +33,10 @@ namespace DepTree.Tests
         public void CanCreateDiagramForDependencyWithImplementation()
         {
             var assembly = this.GetType().Assembly;
-            var config = new DependencyTreeConfig(assembly, startupName: "DepTree.Tests.DiagramTests+Startup");
+            var config = new DependencyTreeConfig(assembly)
+            {
+                StartupName = "DepTree.Tests.DiagramTests+Startup",
+            };
             var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
@@ -53,7 +56,10 @@ namespace DepTree.Tests
         public void MultipleRegistrationsDedupedAndNoted()
         {
             var assembly = this.GetType().Assembly;
-            var config = new DependencyTreeConfig(assembly, startupName: "DepTree.Tests.DiagramTests+Startup");
+            var config = new DependencyTreeConfig(assembly)
+            {
+                StartupName = "DepTree.Tests.DiagramTests+Startup"
+            };
             var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
