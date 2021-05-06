@@ -1,5 +1,8 @@
 # Dependency Tree
 
+[![Release Nuget Package](https://github.com/maisiesadler/deptree/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/release.yml)
+[![Generate Diagrams](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml)
+
 Dependency Tree will load an assembly then, starting with the root type, recursively read the constructor parameters to create a tree of dependencies.
 
 By default it uses the Startup file to load and resolve which type is registered to an interface.
@@ -55,3 +58,8 @@ If there is no startup then set `Interface Resolver` to `None`.
 <img src="http://yuml.me/diagram/scruffy/class/[MyModelRetriever]-&gt;[IDbThing]" />
 
 [Example workflow action](https://github.com/maisiesadler/Endpoints/blob/master/.github/workflows/dependencytree.yml)
+
+## Nuget
+
+- [DepTree](https://www.nuget.org/packages/DepTree)
+- [DepTree.Diagrams](https://www.nuget.org/packages/DepTree.Diagrams)
