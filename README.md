@@ -10,12 +10,12 @@ The GitHub action uses the [Dockerfile](./Dockerfile) in the root of the project
 
 | Name | Environment Variable | CLI setting | | Required |
 | -- | -- | -- | -- | -- |
-| Assembly Location | ASSEMBLY_LOCATION | -a --assembly | The location of the assembly to read | Yes |
-| Root types | ROOT_TYPES | -t --root-types | The root type to use for the dependency tree, multiple values can be used as a csv input | Yes |
-| Skip types | SKIP_TYPES | -s --skip-types | Types to skip, multiple values can be used as a csv input | No |
-| Assembly Config Location | ASSEMBLY_CONFIG_LOCATION | -n --assembly-config | The location of the configuration file required to build IConfiguration for Startup | No |
-| Interface Resolver | INTERFACE_RESOLVER | -i --interface-resolver | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
-| Application Config Location | APPLICATION_CONFIG_LOCATION | -n --assembly-config | The location of application config file | No |
+| Assembly Location | `ASSEMBLY_LOCATION` | `-a` `--assembly` | The location of the assembly to read | Yes |
+| Root types | `ROOT_TYPES` | `-t` `--root-types` | The root type to use for the dependency tree, multiple values can be used as a csv input | Yes |
+| Skip types | `SKIP_TYPES` | `-s` `--skip-types` | Types to skip, multiple values can be used as a csv input | No |
+| Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `-n` `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
+| Interface Resolver | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
+| Application Config Location | `APPLICATION_CONFIG_LOCATION` | `-n` `--assembly-config` | The location of application config file | No |
 
 ### Application config
 
