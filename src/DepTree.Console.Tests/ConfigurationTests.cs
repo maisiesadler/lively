@@ -1,5 +1,6 @@
 using Xunit;
 using DepTree.Console.Configuration;
+using DepTree.Resolvers;
 
 namespace DepTree.Console.Tests
 {
@@ -45,7 +46,7 @@ namespace DepTree.Console.Tests
         }
 
         [Fact]
-        public void CsvTypesAreAdded()
+        public void CsvRootTypesAreAdded()
         {
             var args = new[] { "-a", "assembly-location", "-t", "type1,type2" };
 
@@ -55,7 +56,46 @@ namespace DepTree.Console.Tests
             Assert.Equal(2, config.Generate.Count);
             Assert.Equal("type1", config.Generate[0]);
             Assert.Equal("type2", config.Generate[1]);
-            Assert.Equal("assembly-location", config.AssemblyLocation);
+        }
+
+        [Fact]
+        public void CsvSkipTypesAreAdded()
+        {
+            var args = new[] { "-a", "assembly-location", "-s", "type1,type2" };
+
+            var (config, ok) = ApplicationConfiguration.Build(args);
+
+            Assert.NotNull(config);
+            Assert.Equal(2, config.Skip.Count);
+            Assert.Contains("type1", config.Skip);
+            Assert.Contains("type2", config.Skip);
+        }
+
+        [Theory]
+        [InlineData("None", InterfaceResolverType.None)]
+        [InlineData("Startup", InterfaceResolverType.Startup)]
+        [InlineData("Beans", InterfaceResolverType.Startup)]
+        public void InterfaceResolverCanBeSet(string interfaceResolver, InterfaceResolverType expectedType)
+        {
+            var args = new[] { "-a", "assembly-location", "-i", interfaceResolver };
+
+            var (config, ok) = ApplicationConfiguration.Build(args);
+
+            Assert.NotNull(config);
+            Assert.Equal(expectedType, config.InterfaceResolverType);
+        }
+
+        [Fact]
+        public void AssemblyConfigurationIsRead()
+        {
+            var args = new[] { "-a", "assembly-location", "-n", "testsettings.json" };
+
+            var (config, ok) = ApplicationConfiguration.Build(args);
+
+            Assert.NotNull(config);
+            Assert.NotNull(config.AssemblyConfiguration);
+            var defaultLogLevel = config.AssemblyConfiguration.GetSection("Logging:LogLevel:Default").Value;
+            Assert.Equal("Information", defaultLogLevel);
         }
     }
 }

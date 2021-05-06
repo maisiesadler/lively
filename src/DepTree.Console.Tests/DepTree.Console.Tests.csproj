@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Content Include="exampleappconfig.json" CopyToOutputDirectory="Always" />
+    <Content Include="testsettings.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using CommandLine;
+using DepTree.Resolvers;
 using Microsoft.Extensions.Configuration;
 
 namespace DepTree.Console.Configuration
@@ -16,7 +17,7 @@ namespace DepTree.Console.Configuration
 
         public IConfiguration AssemblyConfiguration { get; private set; }
         public string AssemblyLocation { get; private set; }
-        public string InterfaceResolver { get; private set; }
+        public InterfaceResolverType InterfaceResolverType { get; private set; } = InterfaceResolverType.Startup;
         public HashSet<string> Skip { get; private set; } = new HashSet<string>();
         public List<string> Generate { get; private set; } = new List<string>();
         public List<string> Errors { get; private set; } = new List<string>();
@@ -51,7 +52,7 @@ namespace DepTree.Console.Configuration
             AssemblyLocation = Environment.GetEnvironmentVariable("ASSEMBLY_LOCATION");
             _assemblyConfigLocation = Environment.GetEnvironmentVariable("ASSEMBLY_CONFIG_LOCATION");
             _configLocation = Environment.GetEnvironmentVariable("APPLICATION_CONFIG_LOCATION");
-            InterfaceResolver = Environment.GetEnvironmentVariable("INTERFACE_RESOLVER");
+            TrySetInterfaceResolver(Environment.GetEnvironmentVariable("INTERFACE_RESOLVER"));
 
             var rootTypes = Environment.GetEnvironmentVariable("ROOT_TYPES");
             if (!string.IsNullOrWhiteSpace(rootTypes))
@@ -77,7 +78,7 @@ namespace DepTree.Console.Configuration
                     AssemblyLocation = inputs.AssemblyLocation;
 
                 if (!string.IsNullOrWhiteSpace(inputs.InterfaceResolver))
-                    InterfaceResolver = inputs.InterfaceResolver;
+                    TrySetInterfaceResolver(inputs.InterfaceResolver);
 
                 if (!string.IsNullOrWhiteSpace(inputs.RootTypes))
                 {
@@ -131,6 +132,14 @@ namespace DepTree.Console.Configuration
                 cfgBuilder.AddJsonFile(_assemblyConfigLocation, optional: false, reloadOnChange: false);
                 AssemblyConfiguration = cfgBuilder.Build();
             }
+        }
+
+        private void TrySetInterfaceResolver(string interfaceResolver)
+        {
+            if (interfaceResolver == "None")
+                InterfaceResolverType = InterfaceResolverType.None;
+            else if (interfaceResolver == "Startup")
+                InterfaceResolverType = InterfaceResolverType.Startup;
         }
     }
 }
