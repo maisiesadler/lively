@@ -4,9 +4,13 @@ Dependency Tree will load an assembly then, starting with the root type, recursi
 
 By default it uses the Startup file to load and resolve which type is registered to an interface.
 
+[Example ouput](./DependencyTree.md) for this repository:
+
+<img src="http://yuml.me/diagram/scruffy/class/[DependencyTree]-&gt;[DependencyTreeConfig], [DependencyTreeConfig]-&gt;[Assembly], [DependencyTreeConfig]-&gt;[IConfiguration], [DependencyTreeConfig]-&gt;[HashSet`1], [DependencyTreeConfig]-&gt;[String]" />
+
 ## Using the github action
 
-The GitHub action uses the [Dockerfile](./Dockerfile) in the root of the project.
+The GitHub action is defined [here](./acton.yml) and  uses the [Dockerfile](./Dockerfile) in the root of the project.
 
 | Name | Environment Variable | CLI setting | | Required |
 | -- | -- | -- | -- | -- |
@@ -35,17 +39,14 @@ If there is no startup then set `Interface Resolver` to `None`.
 
 #### Pokedex - dotnet5 web api
 
-Needed to publish a single file application
-
-`dotnet publish -r linux-x64 -p:PublishSingleFile=true -p:UseAppHost=true --self-contained`
+- Needed to publish a single file application `dotnet publish -r linux-x64 -p:PublishSingleFile=true -p:UseAppHost=true --self-contained`
+- Need to add RuntimeIdentifiers [here](https://github.com/maisiesadler/pokedex/blob/main/src/Pokedex/Pokedex.csproj#L5).
 
 [Example output](https://github.com/maisiesadler/pokedex/blob/main/DependencyTree.md)
 
 <img src="http://yuml.me/diagram/scruffy/class/[PokemonController]-&gt;[BasicPokemonInformationRetriever], [PokemonController]-&gt;[TranslatedPokemonInformationRetriever], [PokemonController]-&gt;[ILogger`1], [BasicPokemonInformationRetriever]-&gt;[IPokemonQuery|PokemonQuery], [IPokemonQuery]-2&gt;[ICache`1], [IPokemonQuery]-2&gt;[IPokeApiClient], [TranslatedPokemonInformationRetriever]-&gt;[IPokemonQuery|PokemonQuery], [TranslatedPokemonInformationRetriever]-&gt;[ITranslationQuery|TranslationQuery], [ITranslationQuery]-&gt;[ICache`1], [ITranslationQuery]-&gt;[IFunTranslationsApiClient], [ITranslationQuery]-&gt;[ILogger`1]" />
 
 [Example workflow](https://github.com/maisiesadler/pokedex/blob/main/.github/workflows/dependencytree.yml)
-
-- Need to add RuntimeIdentifiers [here](https://github.com/maisiesadler/pokedex/blob/main/src/Pokedex/Pokedex.csproj#L5).
 
 #### Endpoints - doesn't use Startup
 
