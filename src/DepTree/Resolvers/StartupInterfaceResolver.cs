@@ -30,7 +30,7 @@ namespace DepTree.Resolvers
             _fakeServiceCollection = new FakeServiceCollection();
             method.Invoke(startup, new[] { _fakeServiceCollection });
 
-            SkipAssemblies = config.SkipAssemblies;
+            SkipAssemblies = config.SkipTypes;
         }
 
         private object CreateInstance(Type startupType, IConfiguration configuration)

@@ -24,7 +24,7 @@ namespace DepTree.Console
             var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration)
             {
                 InterfaceResolverType = applicationConfig.InterfaceResolverType,
-                SkipAssemblies = applicationConfig.Skip,
+                SkipTypes = applicationConfig.Skip,
                 StartupName = applicationConfig.StartupName,
             };
 

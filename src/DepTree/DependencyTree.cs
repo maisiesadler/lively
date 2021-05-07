@@ -10,11 +10,13 @@ namespace DepTree
     {
         public Assembly Assembly { get; }
         public IInterfaceResolver InterfaceResolver { get; }
+        public HashSet<string> SkipTypes { get; set; }
 
         public DependencyTree(DependencyTreeConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
             Assembly = config.Assembly ?? throw new ArgumentNullException(nameof(config.Assembly));
+            SkipTypes = config.SkipTypes;
             InterfaceResolver = config.InterfaceResolverType == InterfaceResolverType.None
                 ? new NoInterfaceResolver()
                 : new StartupInterfaceResolver(config.StartupConfig);
@@ -74,11 +76,21 @@ namespace DepTree
             var children = new List<DependencyTreeNode>();
             foreach (var p in c.GetParameters())
             {
+                var nonGenericType = NonGenericTypeName(p.ParameterType);
+                if (SkipTypes?.Contains(nonGenericType.FullName) == true) continue;
+
                 var child = GetDependencies(p.ParameterType.FullName, p.Name, depth + 1);
                 children.Add(child);
             }
 
             return (children, null);
+        }
+
+        private static Type NonGenericTypeName(Type type)
+        {
+            return type.IsGenericType
+                ? type.GetGenericTypeDefinition()
+                : type;
         }
     }
 }

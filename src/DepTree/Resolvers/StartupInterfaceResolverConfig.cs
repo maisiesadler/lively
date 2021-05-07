@@ -8,7 +8,7 @@ namespace DepTree.Resolvers
     {
         public Assembly Assembly { get; set; }
         public IConfiguration Configuration { get; set; }
-        public HashSet<string> SkipAssemblies { get; set; }
+        public HashSet<string> SkipTypes { get; set; }
         public string StartupName { get; set; } = "Startup";
     }
 }
