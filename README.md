@@ -23,7 +23,7 @@ The GitHub action is defined [here](./acton.yml) and  uses the [Dockerfile](./Do
 | Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
 | [Interface Resolver Type](#interface-resolver-type) | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
 | Startup Name | `STARTUP_NAME` | `--startup-name` | Startup Type Name or FullName. Default: `Startup`. | No |
-| [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`. Default: `yuml`. | No |
+| [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`, `mermaid`. Default: `yuml`. | No |
 | [Application Config Location](#application-config) | `APPLICATION_CONFIG_LOCATION` | `-c` `--config` | The location of application config file | No |
 
 ### Application config
@@ -64,6 +64,20 @@ The Startup file name can be overriden to either the type Name or FullName. E.g.
 [Example workflow action](https://github.com/maisiesadler/Endpoints/blob/master/.github/workflows/dependencytree.yml)
 
 ## Output formats
+
+### UML
+
+There are 2 output formats using [yUML](https://yuml.me/), `yuml` and `yumlmd`.
+
+- `yuml` - creates a yUML diagram that can be parsed by [this](https://marketplace.visualstudio.com/items?itemName=JaimeOlivares.yuml) vscode extension which produces a SVG
+- `yumlmd` - creates a URL that is dynamically created into an image by yuml.me which can then be displayed in a html document
+
+## Mermaid
+
+[Mermaid](https://mermaid-js.github.io/) is a javascript based diagramming and charting tool.
+There are a few vscode extensions that can be used to view the diagrams locally and a [chrome](https://github.com/BackMarket/github-mermaid-extension) extension that can be added to view the diagrams in GitHub.
+
+- `mermaid`
 
 ## Nuget
 
