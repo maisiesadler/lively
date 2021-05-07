@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DepTree.Diagrams
 {
     public class Mermaid
     {
+        private static Regex _invalidMermaidChars = new Regex("`");
+
         public static string Create(IList<DependencyTreeNode> nodes)
         {
             var builder = new StringBuilder();
@@ -49,15 +52,19 @@ namespace DepTree.Diagrams
         {
             if (node.Children == null) return;
 
+            var nodename = node.Type?.Name;
+            nodename = _invalidMermaidChars.Replace(nodename, string.Empty);
+
             foreach (var child in node.Children)
             {
                 var childname = child.Type?.Name;
+                childname = _invalidMermaidChars.Replace(childname, string.Empty);
+
                 if (child.Implementation != null)
                 {
                     implementations.TryAdd(childname, child.Implementation.Name);
                 }
 
-                var nodename = node.Type?.Name;
                 if (!relationships.ContainsKey(nodename))
                     relationships[nodename] = new Dictionary<string, int>();
 
