@@ -1,0 +1,21 @@
+name: PR - Run tests
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    needs: create-tag
+    env:
+      VERSION: ${{ needs.create-tag.outputs.new_version }}
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+
+    - name: Test
+      run: dotnet test
+      working-directory: ./src/DepTree.Tests
