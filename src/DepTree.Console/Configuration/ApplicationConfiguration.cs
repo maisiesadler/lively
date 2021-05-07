@@ -160,6 +160,12 @@ namespace DepTree.Console.Configuration
                 OutputFormat = OutputFormatType.Yuml;
             else if (value == "debug")
                 OutputFormat = OutputFormatType.Debug;
+            else if (value == "mermaid")
+                OutputFormat = OutputFormatType.Mermaid;
+            else if (value == "mermaidmd")
+                OutputFormat = OutputFormatType.MermaidMd;
+            else if (!string.IsNullOrWhiteSpace(value))
+                System.Console.WriteLine($"Warning: output format '{value}' is unknown"); 
         }
     }
 }

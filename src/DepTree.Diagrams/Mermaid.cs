@@ -7,7 +7,8 @@ namespace DepTree.Diagrams
     {
         public static string Create(IList<DependencyTreeNode> nodes)
         {
-            var builder = new StringBuilder("classDiagram");
+            var builder = new StringBuilder();
+            builder.AppendLine("classDiagram");
 
             var relationships = new Dictionary<string, Dictionary<string, int>>();
             var implementations = new Dictionary<string, string>();

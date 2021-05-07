@@ -25,7 +25,7 @@ The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dock
 | Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
 | [Interface Resolver Type](#interface-resolver-type) | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
 | Startup Name | `STARTUP_NAME` | `--startup-name` | Startup Type Name or FullName. Default: `Startup`. | No |
-| [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`, `mermaid`. Default: `yuml`. | No |
+| [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`, `mermaid`, `mermaidmd`. Default: `yumlmd`. | No |
 | [Application Config Location](#application-config) | `APPLICATION_CONFIG_LOCATION` | `-c` `--config` | The location of application config file | No |
 
 ### Application config
@@ -79,7 +79,8 @@ There are 2 output formats using [yUML](https://yuml.me/), `yuml` and `yumlmd`.
 [Mermaid](https://mermaid-js.github.io/) is a javascript based diagramming and charting tool.
 There are a few vscode extensions that can be used to view the diagrams locally and a [chrome](https://github.com/BackMarket/github-mermaid-extension) extension that can be added to view the diagrams in GitHub.
 
-- `mermaid`
+- `mermaid` - mermaid diagram
+- `mermaidmd` - mermaid diagram with ```mermaid ``` syntax that can be rendered by vscode/chrome extension in a markdown file
 
 ## Nuget
 

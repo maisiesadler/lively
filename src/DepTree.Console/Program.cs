@@ -46,6 +46,16 @@ namespace DepTree.Console
                 var diagram = yUML.Create(nodes);
                 System.Console.WriteLine(diagram);
             }
+            else if (applicationConfig.OutputFormat == OutputFormatType.Mermaid)
+            {
+                var diagram = Mermaid.Create(nodes);
+                System.Console.WriteLine(diagram);
+            }
+            else if (applicationConfig.OutputFormat == OutputFormatType.MermaidMd)
+            {
+                var diagram = MermaidMd.Create(nodes);
+                System.Console.WriteLine(diagram);
+            }
             else if (applicationConfig.OutputFormat == OutputFormatType.Debug)
             {
                 System.Console.WriteLine($"Got {nodes?.Count} nodes");

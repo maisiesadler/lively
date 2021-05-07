@@ -5,5 +5,7 @@ namespace DepTree.Console.Configuration
         Yuml,
         YumlMd,
         Debug,
+        Mermaid,
+        MermaidMd,
     }
 }
