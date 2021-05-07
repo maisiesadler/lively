@@ -21,10 +21,10 @@ The GitHub action is defined [here](./acton.yml) and  uses the [Dockerfile](./Do
 | Root types | `ROOT_TYPES` | `-t` `--root-types` | The root type to use for the dependency tree, multiple values can be used as a csv input | Yes |
 | Skip types | `SKIP_TYPES` | `-s` `--skip-types` | Types to skip, multiple values can be used as a csv input | No |
 | Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
-| Interface Resolver | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
+| [Interface Resolver Type](#interface-resolver-type) | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
 | Startup Name | `STARTUP_NAME` | `--startup-name` | Startup Type Name or FullName. Default: `Startup`. | No |
-| Output Format | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`. Default: `yuml`. | No |
-| Application Config Location | `APPLICATION_CONFIG_LOCATION` | `-c` `--config` | The location of application config file | No |
+| [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`. Default: `yuml`. | No |
+| [Application Config Location](#application-config) | `APPLICATION_CONFIG_LOCATION` | `-c` `--config` | The location of application config file | No |
 
 ### Application config
 
@@ -32,13 +32,15 @@ There is support for passing in a config file for multiple `Skip` or `Generate` 
 
 [Example](./applicationconfig.json)
 
-### Interface resolver
+### Interface Resolver Type
 
 If `Interface Resolver` is `Startup` (default) then the application will look for a class named Startup.
 
 If the Startup file has an IConfiguration constructor then set the `Assembly Config Location` to the path of an example config file that has enough data in it to build the configuration.
 
 If there is no startup then set `Interface Resolver` to `None`.
+
+The Startup file name can be overriden to either the type Name or FullName. E.g. `TestStartup` or `DepTree.MultipleApplications.Startup`.
 
 ### Example applications
 
@@ -60,6 +62,8 @@ If there is no startup then set `Interface Resolver` to `None`.
 <img src="http://yuml.me/diagram/scruffy/class/[MyModelRetriever]-&gt;[IDbThing]" />
 
 [Example workflow action](https://github.com/maisiesadler/Endpoints/blob/master/.github/workflows/dependencytree.yml)
+
+## Output formats
 
 ## Nuget
 

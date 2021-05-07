@@ -1,11 +1,11 @@
 using System.Text.RegularExpressions;
-using DepTree.Diagrams;
+using DepTree.Resolvers;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace DepTree.Tests
+namespace DepTree.Diagrams.Tests
 {
-    public class DiagramTests
+    public class YumlTests
     {
         private static Regex _whitespace = new Regex("\\s+");
 
@@ -13,8 +13,11 @@ namespace DepTree.Tests
         public void CanCreateDiagramForSimpleDependency()
         {
             var assembly = this.GetType().Assembly;
-            var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithDeps";
+            var config = new DependencyTreeConfig(assembly)
+            {
+                InterfaceResolverType = InterfaceResolverType.None,
+            };
+            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
@@ -35,9 +38,9 @@ namespace DepTree.Tests
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Tests.DiagramTests+Startup",
+                StartupName = "DepTree.Diagrams.Tests.YumlTests+Startup",
             };
-            var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
@@ -58,9 +61,9 @@ namespace DepTree.Tests
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Tests.DiagramTests+Startup"
+                StartupName = "DepTree.Diagrams.Tests.YumlTests+Startup",
             };
-            var fullTypeName = "DepTree.Tests.DiagramTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
