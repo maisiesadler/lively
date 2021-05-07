@@ -4,7 +4,7 @@ using Xunit;
 
 namespace DepTree.Diagrams.Tests
 {
-    public class YumlTests
+    public class MermaidTests
     {
         private static Regex _whitespace = new Regex("\\s+");
 
@@ -13,19 +13,16 @@ namespace DepTree.Diagrams.Tests
         {
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.MermaidTests+ExampleTypeWithDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = yUML.Create(new[] { depTree });
+            var diagram = Mermaid.Create(new[] { depTree });
 
-            var expected = @"// {type:class}
-// {direction:topDown}
-// {generate:true}
+            var expected = @"classDiagram
+  ExampleTypeWithDeps --> ExampleType";
 
-[ExampleTypeWithDeps]->[ExampleType]";
-
-            Assert.Equal(expected.Trim(), diagram.Trim());
+            Assert.Equal(Normalise(expected), Normalise(diagram));
         }
 
         [Fact]
@@ -34,21 +31,21 @@ namespace DepTree.Diagrams.Tests
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Diagrams.Tests.YumlTests+Startup",
+                StartupName = "DepTree.Diagrams.Tests.MermaidTests+Startup",
             };
-            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.MermaidTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = yUML.Create(new[] { depTree });
+            var diagram = Mermaid.Create(new[] { depTree });
 
-            var expected = @"// {type:class}
-// {direction:topDown}
-// {generate:true}
+            var expected = @"classDiagram
+  ExampleTypeWithInterfaceDeps --> ExampleInterface
+  class ExampleInterface {
+    ExampleImplementation
+  }";
 
-[ExampleTypeWithInterfaceDeps]->[ExampleInterface|ExampleImplementation]";
-
-            Assert.Equal(expected.Trim(), diagram.Trim());
+            Assert.Equal(Normalise(expected), Normalise(diagram));
         }
 
         [Fact]
@@ -57,27 +54,26 @@ namespace DepTree.Diagrams.Tests
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Diagrams.Tests.YumlTests+Startup",
+                StartupName = "DepTree.Diagrams.Tests.MermaidTests+Startup",
             };
-            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.MermaidTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = yUML.Create(new[] { depTree, depTree });
+            var diagram = Mermaid.Create(new[] { depTree, depTree });
 
-            var expected = @"// {type:class}
-// {direction:topDown}
-// {generate:true}
-
-[ExampleTypeWithInterfaceDeps]-2>[ExampleInterface|ExampleImplementation]
-";
+            var expected = @"classDiagram
+  ExampleTypeWithInterfaceDeps --> ""2"" ExampleInterface
+  class ExampleInterface {
+    ExampleImplementation
+  }";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
 
         private static string Normalise(string s)
         {
-            return _whitespace.Replace(s, " ");
+            return _whitespace.Replace(s, " ").Trim();
         }
 
         public class ExampleTypeWithDeps
