@@ -98,15 +98,17 @@ namespace DepTree.Console.Tests
             Assert.Equal("Information", defaultLogLevel);
         }
 
-        [Fact]
-        public void CanSpecifyStartupNameOverride()
+        [Theory]
+        [InlineData("beans", "beans")]
+        [InlineData("", "Startup")]
+        public void CanSpecifyStartupNameOverride(string startupNameInput, string expectedStartupName)
         {
-            var args = new[] { "-a", "assembly-location", "--startup-name", "TestStartup" };
+            var args = new[] { "-a", "assembly-location", "--startup-name", startupNameInput };
 
             var (config, ok) = ApplicationConfiguration.Build(new TestEnvironmentVariableProvider(), args);
 
             Assert.NotNull(config);
-            Assert.Equal("TestStartup", config.StartupName);
+            Assert.Equal(expectedStartupName, config.StartupName);
         }
 
         [Fact]

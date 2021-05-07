@@ -54,10 +54,11 @@ namespace DepTree.Console.Configuration
             AssemblyLocation = environmentVariableProvider.GetEnvironmentVariable("ASSEMBLY_LOCATION");
             _assemblyConfigLocation = environmentVariableProvider.GetEnvironmentVariable("ASSEMBLY_CONFIG_LOCATION");
             _configLocation = environmentVariableProvider.GetEnvironmentVariable("APPLICATION_CONFIG_LOCATION");
-            StartupName = environmentVariableProvider.GetEnvironmentVariable("STARTUP_NAME");
             TrySetInterfaceResolver(environmentVariableProvider.GetEnvironmentVariable("INTERFACE_RESOLVER"));
             TrySetOutputFormat(environmentVariableProvider.GetEnvironmentVariable("OUTPUT_FORMAT"));
 
+            var startupName = environmentVariableProvider.GetEnvironmentVariable("STARTUP_NAME");
+            if (!string.IsNullOrWhiteSpace(startupName)) StartupName = startupName;
             var rootTypes = environmentVariableProvider.GetEnvironmentVariable("ROOT_TYPES");
             if (!string.IsNullOrWhiteSpace(rootTypes))
             {
@@ -165,7 +166,7 @@ namespace DepTree.Console.Configuration
             else if (value == "mermaidmd")
                 OutputFormat = OutputFormatType.MermaidMd;
             else if (!string.IsNullOrWhiteSpace(value))
-                System.Console.WriteLine($"Warning: output format '{value}' is unknown"); 
+                System.Console.WriteLine($"Warning: output format '{value}' is unknown");
         }
     }
 }
