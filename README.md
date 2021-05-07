@@ -7,13 +7,15 @@ Dependency Tree will load an assembly then, starting with the root type, recursi
 
 By default it uses the Startup file to load and resolve which type is registered to an interface.
 
-[Example ouput](./DependencyTree.md) for this repository:
+There are a few different [output formats](#output-formats) that can be configured, the default is `yumlmd`.
+
+[Example yumlmd ouput](./DependencyTree.md) for this repository:
 
 <img src="http://yuml.me/diagram/scruffy/class/[DependencyTree]-&gt;[DependencyTreeConfig], [DependencyTreeConfig]-&gt;[Assembly], [DependencyTreeConfig]-&gt;[IConfiguration], [DependencyTreeConfig]-&gt;[HashSet`1], [DependencyTreeConfig]-&gt;[String]" />
 
 ## Using the github action
 
-The GitHub action is defined [here](./acton.yml) and  uses the [Dockerfile](./Dockerfile) in the root of the project.
+The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dockerfile](./Dockerfile) in the root of the project.
 
 | Name | Environment Variable | CLI setting | | Required |
 | -- | -- | -- | -- | -- |
