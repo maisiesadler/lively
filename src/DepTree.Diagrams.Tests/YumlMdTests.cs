@@ -5,7 +5,7 @@ using Xunit;
 
 namespace DepTree.Diagrams.Tests
 {
-    public class YumlTests
+    public class YumlMdTests
     {
         private static Regex _whitespace = new Regex("\\s+");
 
@@ -14,17 +14,13 @@ namespace DepTree.Diagrams.Tests
         {
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.YumlMdTests+ExampleTypeWithDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = yUML.Create(new[] { depTree });
+            var diagram = yUMLmd.Create(new[] { depTree });
 
-            var expected = @"// {type:class}
-// {direction:topDown}
-// {generate:true}
-
-[ExampleTypeWithDeps]->[ExampleType]";
+            var expected = @"<img src=""http://yuml.me/diagram/scruffy/class/[ExampleTypeWithDeps]-&gt;[ExampleType]"" />";
 
             Assert.Equal(expected.Trim(), diagram.Trim());
         }
@@ -35,19 +31,15 @@ namespace DepTree.Diagrams.Tests
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Diagrams.Tests.YumlTests+Startup",
+                StartupName = "DepTree.Diagrams.Tests.YumlMdTests+Startup",
             };
-            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.YumlMdTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = yUML.Create(new[] { depTree });
+            var diagram = yUMLmd.Create(new[] { depTree });
 
-            var expected = @"// {type:class}
-// {direction:topDown}
-// {generate:true}
-
-[ExampleTypeWithInterfaceDeps]->[ExampleInterface|ExampleImplementation]";
+            var expected = @"<img src=""http://yuml.me/diagram/scruffy/class/[ExampleTypeWithInterfaceDeps]-&gt;[ExampleInterface|ExampleImplementation]"" />";
 
             Assert.Equal(expected.Trim(), diagram.Trim());
         }
@@ -58,20 +50,15 @@ namespace DepTree.Diagrams.Tests
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Diagrams.Tests.YumlTests+Startup",
+                StartupName = "DepTree.Diagrams.Tests.YumlMdTests+Startup",
             };
-            var fullTypeName = "DepTree.Diagrams.Tests.YumlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.YumlMdTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = yUML.Create(new[] { depTree, depTree });
+            var diagram = yUMLmd.Create(new[] { depTree, depTree });
 
-            var expected = @"// {type:class}
-// {direction:topDown}
-// {generate:true}
-
-[ExampleTypeWithInterfaceDeps]-2>[ExampleInterface|ExampleImplementation]
-";
+            var expected = @"<img src=""http://yuml.me/diagram/scruffy/class/[ExampleTypeWithInterfaceDeps]-2&gt;[ExampleInterface|ExampleImplementation]"" />";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
