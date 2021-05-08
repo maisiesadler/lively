@@ -31,7 +31,7 @@ The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dock
 | Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
 | [Interface Resolver Type](#interface-resolver-type) | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
 | Startup Name | `STARTUP_NAME` | `--startup-name` | Startup Type Name or FullName. Default: `Startup`. | No |
-| [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`, `mermaid`, `mermaidmd`. Default: `yumlmd`. | No |
+| [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`, `mermaid`, `mermaidmd`, `plantuml`. Default: `yumlmd`. | No |
 | [Application Config Location](#application-config) | `APPLICATION_CONFIG_LOCATION` | `-c` `--config` | The location of application config file | No |
 
 ### Application config
@@ -73,12 +73,22 @@ The Startup file name can be overriden to either the type Name or FullName. E.g.
 
 ## Output formats
 
+`yumlmd` is the default.
+
 ### UML
+
+### yUML
 
 There are 2 output formats using [yUML](https://yuml.me/), `yuml` and `yumlmd`.
 
 - `yuml` - creates a yUML diagram that can be parsed by [this](https://marketplace.visualstudio.com/items?itemName=JaimeOlivares.yuml) vscode extension which produces a SVG
 - `yumlmd` - creates a URL that is dynamically created into an image by yuml.me which can then be displayed in a html document
+
+#### PlantUML
+
+[PlantUML](https://plantuml.com/class-diagram)
+
+- `plantuml`
 
 ### Mermaid
 
