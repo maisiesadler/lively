@@ -56,6 +56,11 @@ namespace DepTree.Console
                 var diagram = MermaidMd.Create(nodes);
                 System.Console.WriteLine(diagram);
             }
+            else if (applicationConfig.OutputFormat == OutputFormatType.PlantUml)
+            {
+                var diagram = PlantUml.Create(nodes);
+                System.Console.WriteLine(diagram);
+            }
             else if (applicationConfig.OutputFormat == OutputFormatType.Debug)
             {
                 System.Console.WriteLine($"Got {nodes?.Count} nodes");

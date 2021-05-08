@@ -165,6 +165,8 @@ namespace DepTree.Console.Configuration
                 OutputFormat = OutputFormatType.Mermaid;
             else if (value == "mermaidmd")
                 OutputFormat = OutputFormatType.MermaidMd;
+            else if (value == "plantuml")
+                OutputFormat = OutputFormatType.PlantUml;
             else if (!string.IsNullOrWhiteSpace(value))
                 System.Console.WriteLine($"Warning: output format '{value}' is unknown");
         }

@@ -7,5 +7,6 @@ namespace DepTree.Console.Configuration
         Debug,
         Mermaid,
         MermaidMd,
+        PlantUml,
     }
 }
