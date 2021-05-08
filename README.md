@@ -6,7 +6,8 @@
 [![DepTree](https://img.shields.io/nuget/v/DepTree)](https://www.nuget.org/packages/DepTree/)
 [![DepTree.Diagrams](https://img.shields.io/nuget/v/DepTree.Diagrams)](https://www.nuget.org/packages/DepTree/Diagrams/)
 
-Dependency Tree will load an assembly then, starting with the root type, recursively read the constructor parameters to create a tree of dependencies.
+Dependency Tree uses reflection to automatically create a tree of class dependencies for given types in an assembly.
+It is available as a [GitHub Action](#using-the-github-action) and a [Nuget](#nuget) package.
 
 By default it uses the Startup file to load and resolve which type is registered to an interface.
 
@@ -17,6 +18,8 @@ There are a few different [output formats](#output-formats) that can be configur
 <img src="http://yuml.me/diagram/scruffy/class/[DependencyTree]-&gt;[DependencyTreeConfig], [DependencyTreeConfig]-&gt;[Assembly], [DependencyTreeConfig]-&gt;[IConfiguration], [DependencyTreeConfig]-&gt;[HashSet`1], [DependencyTreeConfig]-&gt;[String]" />
 
 ## Using the github action
+
+Available [here](https://github.com/marketplace/actions/generate-uml-dependencies).
 
 The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dockerfile](./Dockerfile) in the root of the project.
 
@@ -77,7 +80,7 @@ There are 2 output formats using [yUML](https://yuml.me/), `yuml` and `yumlmd`.
 - `yuml` - creates a yUML diagram that can be parsed by [this](https://marketplace.visualstudio.com/items?itemName=JaimeOlivares.yuml) vscode extension which produces a SVG
 - `yumlmd` - creates a URL that is dynamically created into an image by yuml.me which can then be displayed in a html document
 
-## Mermaid
+### Mermaid
 
 [Mermaid](https://mermaid-js.github.io/) is a javascript based diagramming and charting tool.
 There are a few vscode extensions that can be used to view the diagrams locally and a [chrome](https://github.com/BackMarket/github-mermaid-extension) extension that can be added to view the diagrams in GitHub.
