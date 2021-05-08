@@ -19,7 +19,7 @@ There are a few different [output formats](#output-formats) that can be configur
 
 ## Using the github action
 
-Available [here](https://github.com/marketplace/actions/generate-uml-dependencies).
+Available [here](https://github.com/marketplace/actions/generate-dependency-diagrams).
 
 The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dockerfile](./Dockerfile) in the root of the project.
 
