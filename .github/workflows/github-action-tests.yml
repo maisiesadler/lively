@@ -5,7 +5,7 @@ on:
     branches: [ gh-action-test ]
 
 jobs:
-  generate:
+  build:
     runs-on: ubuntu-latest
     
     steps:
@@ -20,8 +20,9 @@ jobs:
     - name: Build project
       run: dotnet build -c Release
 
+  generate_yuml:
     - name: Generate UML dependencies
-      id: generate_uml
+      id: generate
       uses: maisiesadler/deptree@v1.0.1
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
@@ -30,8 +31,9 @@ jobs:
 
     - name: Output file
       shell: bash
-      run: echo '${{ steps.generate_uml.outputs.result }}' > example-outputs/yumlmd.md
+      run: echo '${{ steps.generate.outputs.result }}' > example-outputs/yumlmd.md
 
+  commit:
     - uses: EndBug/add-and-commit@v7
       with:
         default_author: github_actions
