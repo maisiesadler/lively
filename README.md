@@ -3,6 +3,9 @@
 [![Release Nuget Package](https://github.com/maisiesadler/deptree/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/release.yml)
 [![Generate Diagrams](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml)
 
+[![DepTree](https://img.shields.io/nuget/v/DepTree)](https://www.nuget.org/packages/DepTree/)
+[![DepTree.Diagrams](https://img.shields.io/nuget/v/DepTree.Diagrams)](https://www.nuget.org/packages/DepTree/Diagrams/)
+
 Dependency Tree will load an assembly then, starting with the root type, recursively read the constructor parameters to create a tree of dependencies.
 
 By default it uses the Startup file to load and resolve which type is registered to an interface.
@@ -21,7 +24,7 @@ The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dock
 | -- | -- | -- | -- | -- |
 | Assembly Location | `ASSEMBLY_LOCATION` | `-a` `--assembly` | The location of the assembly to read | Yes |
 | Root types | `ROOT_TYPES` | `-t` `--root-types` | The root type to use for the dependency tree, multiple values can be used as a csv input | Yes |
-| Skip types | `SKIP_TYPES` | `-s` `--skip-types` | Types to skip, multiple values can be used as a csv input | No |
+| Skip types | `SKIP_TYPES` | `-s` `--skip-types` | Types to not include in diagram, multiple values can be used as a csv input | No |
 | Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
 | [Interface Resolver Type](#interface-resolver-type) | `INTERFACE_RESOLVER` | `-i` `--interface-resolver` | Method for resolving interfaces, Allowed Values: None, Startup. Default: Startup. | No |
 | Startup Name | `STARTUP_NAME` | `--startup-name` | Startup Type Name or FullName. Default: `Startup`. | No |

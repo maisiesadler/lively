@@ -8,6 +8,8 @@ namespace DepTree
 {
     public class DependencyTree
     {
+        private readonly int _maxDepth = 100;
+
         public Assembly Assembly { get; }
         public IInterfaceResolver InterfaceResolver { get; }
         public HashSet<string> SkipTypes { get; set; }
@@ -36,6 +38,11 @@ namespace DepTree
                 return new DependencyTreeNode(name, td, DependencyTreeError.UnknownType);
             }
             var typeDescription = new ConcreteTypeDescription(type);
+
+            if (depth > _maxDepth)
+            {
+                return new DependencyTreeNode(name, typeDescription, DependencyTreeError.TooManyLayers);
+            }
 
             if (type.IsInterface)
             {

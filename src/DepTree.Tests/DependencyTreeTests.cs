@@ -139,12 +139,37 @@ namespace DepTree.Tests
             Assert.Null(depTree.Children);
         }
 
+        [Fact]
+        public void RecursiveGenericDependencyDoesNotStackOverflow()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
+            var fullTypeName = "DepTree.Tests.DependencyTreeTests+ExampleTypeWithRecursiveDeps";
+
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
+
+            Assert.NotNull(depTree);
+            Assert.Equal("root", depTree.Name);
+
+            var node = depTree;
+            for (var i = 0; i <= 100; i++)
+            {
+                Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleTypeWithRecursiveDeps", node.Type.FullName);
+                Assert.Equal("ExampleTypeWithRecursiveDeps", node.Type.Name);
+                Assert.Null(node.Error);
+                node = Assert.Single(node.Children);
+            }
+
+            Assert.Equal("DepTree.Tests.DependencyTreeTests+ExampleTypeWithRecursiveDeps", node.Type.FullName);
+            Assert.Equal("ExampleTypeWithRecursiveDeps", node.Type.Name);
+            Assert.Equal(DependencyTreeError.TooManyLayers, node.Error);
+            Assert.Null(node.Children);
+        }
+
         public class ExampleTypeWithDeps
         {
-            public ExampleTypeWithDeps(ExampleType example)
-            {
-
-            }
+            public ExampleTypeWithDeps(ExampleType example) { }
         }
 
         public class ExampleType
@@ -153,10 +178,7 @@ namespace DepTree.Tests
 
         public class ExampleTypeWithInterfaceDeps
         {
-            public ExampleTypeWithInterfaceDeps(ExampleInterface example)
-            {
-
-            }
+            public ExampleTypeWithInterfaceDeps(ExampleInterface example) { }
         }
 
         public interface ExampleInterface
@@ -169,14 +191,16 @@ namespace DepTree.Tests
 
         public class ExampleTypeWithGenericDeps
         {
-            public ExampleTypeWithGenericDeps(ExampleType<string> example)
-            {
-
-            }
+            public ExampleTypeWithGenericDeps(ExampleType<string> example) { }
         }
 
         public class ExampleType<T>
         {
+        }
+
+        public class ExampleTypeWithRecursiveDeps
+        {
+            public ExampleTypeWithRecursiveDeps(ExampleTypeWithRecursiveDeps example) { }
         }
 
         public class Startup
