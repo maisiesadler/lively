@@ -1,0 +1,38 @@
+name: Use GitHub Action
+
+on:
+  push:
+    branches: [ gh-action-test ]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-dotnet@v1
+      with:
+          source-url: https://api.nuget.org/v3/index.json
+      env:
+          NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
+
+    - name: Build project
+      run: dotnet build -c Release
+
+    - name: Generate UML dependencies
+      id: generate_uml
+      uses: maisiesadler/deptree@v1.0.1
+      env:
+        ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
+        ROOT_TYPES: 'DepTree.DependencyTree'
+        INTERFACE_RESOLVER: None
+
+    - name: Output file
+      shell: bash
+      run: echo '${{ steps.generate_uml.outputs.result }}' > example-outputs/yumlmd.md
+
+    - uses: EndBug/add-and-commit@v7
+      with:
+        default_author: github_actions
+        message: 'Generate diagrams'
