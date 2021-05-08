@@ -4,7 +4,7 @@ using Xunit;
 
 namespace DepTree.Diagrams.Tests
 {
-    public class MermaidMdTests
+    public class PlantUmlTests
     {
         private static Regex _whitespace = new Regex("[\r\n]+");
 
@@ -13,16 +13,18 @@ namespace DepTree.Diagrams.Tests
         {
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "DepTree.Diagrams.Tests.MermaidTests+ExampleTypeWithDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.PlantUmlTests+ExampleTypeWithDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = MermaidMd.Create(new[] { depTree });
+            var diagram = PlantUml.Create(new[] { depTree });
 
-            var expected = @"```mermaid
-classDiagram
-  ExampleTypeWithDeps --> ExampleType
-```";
+            var expected = @"@startuml
+
+class ExampleTypeWithDeps
+ExampleTypeWithDeps ---> ExampleType
+
+@enduml";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
@@ -33,21 +35,24 @@ classDiagram
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Diagrams.Tests.MermaidTests+Startup",
+                StartupName = "DepTree.Diagrams.Tests.PlantUmlTests+Startup",
             };
-            var fullTypeName = "DepTree.Diagrams.Tests.MermaidTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.PlantUmlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = MermaidMd.Create(new[] { depTree });
+            var diagram = PlantUml.Create(new[] { depTree });
 
-            var expected = @"```mermaid
-classDiagram
-  ExampleTypeWithInterfaceDeps --> ExampleInterface
-  class ExampleInterface {
-    ExampleImplementation
-  }
-```";
+            var expected = @"@startuml
+
+class ExampleTypeWithInterfaceDeps
+ExampleTypeWithInterfaceDeps ---> ExampleInterface
+
+interface ExampleInterface {
+  ExampleImplementation
+}
+
+@enduml";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
@@ -58,21 +63,45 @@ classDiagram
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "DepTree.Diagrams.Tests.MermaidTests+Startup",
+                StartupName = "DepTree.Diagrams.Tests.PlantUmlTests+Startup",
             };
-            var fullTypeName = "DepTree.Diagrams.Tests.MermaidTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "DepTree.Diagrams.Tests.PlantUmlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = MermaidMd.Create(new[] { depTree, depTree });
+            var diagram = PlantUml.Create(new[] { depTree, depTree });
 
-            var expected = @"```mermaid
-classDiagram
-  ExampleTypeWithInterfaceDeps --> ""2"" ExampleInterface
-  class ExampleInterface {
-    ExampleImplementation
-  }
-```";
+            var expected = @"@startuml
+
+class ExampleTypeWithInterfaceDeps
+ExampleTypeWithInterfaceDeps ---> ""2"" ExampleInterface
+
+interface ExampleInterface {
+  ExampleImplementation
+}
+
+@enduml";
+
+            Assert.Equal(Normalise(expected), Normalise(diagram));
+        }
+
+        [Fact]
+        public void CanCreateDiagramForGenericDependency()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
+            var fullTypeName = "DepTree.Diagrams.Tests.PlantUmlTests+ExampleTypeWithGenericDeps";
+
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
+            var diagram = PlantUml.Create(new[] { depTree });
+
+            var expected = @"@startuml
+
+class ExampleTypeWithGenericDeps
+ExampleTypeWithGenericDeps ---> ExampleGenericType`2
+
+@enduml";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
@@ -107,6 +136,18 @@ classDiagram
         }
 
         public class ExampleImplementation : ExampleInterface
+        {
+        }
+
+        public class ExampleTypeWithGenericDeps
+        {
+            public ExampleTypeWithGenericDeps(ExampleGenericType<string, int> example)
+            {
+
+            }
+        }
+
+        public class ExampleGenericType<T1, T2>
         {
         }
 

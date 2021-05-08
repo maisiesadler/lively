@@ -7,7 +7,7 @@ namespace DepTree.Diagrams.Tests
 {
     public class YumlMdTests
     {
-        private static Regex _whitespace = new Regex("\\s+");
+        private static Regex _whitespace = new Regex("[\r\n]+");
 
         [Fact]
         public void CanCreateDiagramForSimpleDependency()
@@ -65,7 +65,7 @@ namespace DepTree.Diagrams.Tests
 
         private static string Normalise(string s)
         {
-            return _whitespace.Replace(s, " ");
+            return _whitespace.Replace(s, "\n");
         }
 
         public class ExampleTypeWithDeps

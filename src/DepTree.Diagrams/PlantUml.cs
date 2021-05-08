@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace DepTree.Diagrams
 {
-    public class Mermaid
+    public class PlantUml
     {
-        private static Regex _invalidMermaidChars = new Regex("`");
-
         public static string Create(IList<DependencyTreeNode> nodes)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("classDiagram");
+            builder.AppendLine("@startuml");
+            builder.AppendLine();
 
             var relationships = new Dictionary<string, Dictionary<string, int>>();
             var implementations = new Dictionary<string, string>();
@@ -22,25 +20,34 @@ namespace DepTree.Diagrams
 
             foreach (var (nodeName, children) in relationships)
             {
+                builder.AppendLine($"class {nodeName}");
                 foreach (var (childname, count) in children)
                 {
                     if (count == 1)
                     {
-                        builder.AppendLine($"  {nodeName} --> {childname}");
+                        builder.AppendLine($"{nodeName} ---> {childname}");
                     }
                     else
                     {
-                        builder.AppendLine($"  {nodeName} --> \"{count}\" {childname}");
+                        builder.AppendLine($"{nodeName} ---> \"2\" {childname}");
                     }
                 }
             }
 
+            if (implementations.Count > 0)
+            {
+                builder.AppendLine();
+            }
+
             foreach (var (@interface, implementation) in implementations)
             {
-                builder.AppendLine($"  class {@interface} {{");
-                builder.AppendLine($"    {implementation}");
-                builder.AppendLine("  }");
+                builder.AppendLine($"interface {@interface} {{");
+                builder.AppendLine($"  {implementation}");
+                builder.AppendLine("}");
             }
+
+            builder.AppendLine();
+            builder.AppendLine("@enduml");
 
             return builder.ToString();
         }
@@ -52,19 +59,15 @@ namespace DepTree.Diagrams
         {
             if (node.Children == null) return;
 
-            var nodename = node.Type?.Name;
-            nodename = _invalidMermaidChars.Replace(nodename, string.Empty);
-
             foreach (var child in node.Children)
             {
                 var childname = child.Type?.Name;
-                childname = _invalidMermaidChars.Replace(childname, string.Empty);
-
                 if (child.Implementation != null)
                 {
                     implementations.TryAdd(childname, child.Implementation.Name);
                 }
 
+                var nodename = node.Type?.Name;
                 if (!relationships.ContainsKey(nodename))
                     relationships[nodename] = new Dictionary<string, int>();
 

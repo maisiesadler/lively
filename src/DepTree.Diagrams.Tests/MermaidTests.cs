@@ -6,7 +6,7 @@ namespace DepTree.Diagrams.Tests
 {
     public class MermaidTests
     {
-        private static Regex _whitespace = new Regex("\\s+");
+        private static Regex _whitespace = new Regex("[\r\n]+");
 
         [Fact]
         public void CanCreateDiagramForSimpleDependency()
@@ -90,7 +90,7 @@ namespace DepTree.Diagrams.Tests
 
         private static string Normalise(string s)
         {
-            return _whitespace.Replace(s, " ").Trim();
+            return _whitespace.Replace(s, "\n").Trim();
         }
 
         public class ExampleTypeWithDeps
