@@ -22,7 +22,7 @@ jobs:
 
     - name: Generate yumlmd
       id: generate_yumlmd
-      uses: maisiesadler/deptree@v1.0.1
+      uses: maisiesadler/deptree@v1.0.2-gh-action-test.0
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
