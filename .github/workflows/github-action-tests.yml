@@ -20,7 +20,7 @@ jobs:
     - name: Build project
       run: dotnet build -c Release
 
-    - name: Generate UML dependencies
+    - name: Generate yumlmd
       id: generate_yumlmd
       uses: maisiesadler/deptree@v1.0.1
       env:
@@ -28,11 +28,11 @@ jobs:
         ROOT_TYPES: 'DepTree.DependencyTree'
         INTERFACE_RESOLVER: None
 
-    - name: Output file
+    - name: Output yumlmd
       shell: bash
       run: echo '${{ steps.generate_yumlmd.outputs.result }}' > example-outputs/yumlmd.md
 
-    - name: Generate UML dependencies
+    - name: Generate yuml
       id: generate_yuml
       uses: maisiesadler/deptree@v1.0.1
       env:
@@ -41,7 +41,7 @@ jobs:
         INTERFACE_RESOLVER: None
         OUTPUT_FORMAT: yuml
 
-    - name: Output file
+    - name: Output yuml
       shell: bash
       run: echo '${{ steps.generate_yuml.outputs.result }}' > example-outputs/yuml.yuml
 
