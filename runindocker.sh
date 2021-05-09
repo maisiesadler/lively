@@ -17,6 +17,7 @@ if [ $r -ne 0 ]; then
     exit $r
 fi
 
+echo "printing result"
 echo $result
 
 echo "::set-output name=result::$result"
