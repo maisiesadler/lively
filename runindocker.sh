@@ -1,5 +1,7 @@
 #!/bin/bash
 
+IFS=
+
 result=$(ASSEMBLY_LOCATION=$ASSEMBLY_LOCATION \
   APPLICATION_CONFIG_LOCATION=$APPLICATION_CONFIG_LOCATION \
   ROOT_TYPES=$ROOT_TYPES \
@@ -16,5 +18,7 @@ if [ $r -ne 0 ]; then
     echo $result
     exit $r
 fi
+
+echo $result
 
 echo "::set-output name=result::$result"
