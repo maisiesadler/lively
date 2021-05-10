@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  build:
+  generate_examples:
     runs-on: ubuntu-latest
     
     steps:
@@ -31,7 +31,7 @@ jobs:
 
     - name: Output yumlmd
       shell: bash
-      run: echo '${{ steps.generate_yumlmd.outputs.result }}' > example-outputs/yumlmd.md
+      run: 
 
     - name: Generate yuml
       id: generate_yuml
@@ -41,10 +41,6 @@ jobs:
         ROOT_TYPES: 'DepTree.DependencyTree'
         INTERFACE_RESOLVER: None
         OUTPUT_FORMAT: yuml
-
-    - name: Output yuml
-      shell: bash
-      run: echo '${{ steps.generate_yuml.outputs.result }}' > example-outputs/yuml.yuml
     
     - name: Generate PlantUML
       id: generate_plantuml
@@ -55,9 +51,22 @@ jobs:
         INTERFACE_RESOLVER: None
         OUTPUT_FORMAT: plantuml
 
-    - name: Output generate_plantuml
+    - name: Generate Mermaid
+      id: generate_mermaidmd
+      uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
+      env:
+        ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
+        ROOT_TYPES: 'DepTree.DependencyTree'
+        INTERFACE_RESOLVER: None
+        OUTPUT_FORMAT: mermaidmd
+
+    - name: Write outputs to file
       shell: bash
-      run: echo '${{ steps.generate_plantuml.outputs.result }}' > example-outputs/plantuml.puml
+      run: |
+        echo '${{ steps.generate_yumlmd.outputs.result }}' > example-outputs/yumlmd.md
+        echo '${{ steps.generate_yuml.outputs.result }}' > example-outputs/yuml.yuml
+        echo '${{ steps.generate_plantuml.outputs.result }}' > example-outputs/plantuml.puml
+        echo '${{ steps.generate_mermaidmd.outputs.result }}' > example-outputs/mermaidmd.md
 
     - uses: EndBug/add-and-commit@v7
       name: Commit Changes
