@@ -1,1 +1,7 @@
 // {type:class}
+// {direction:topDown}
+// {generate:true}
+
+[DependencyTree]->[DependencyTreeConfig]
+[DependencyTreeConfig]->[Assembly]
+[DependencyTreeConfig]->[IConfiguration]
