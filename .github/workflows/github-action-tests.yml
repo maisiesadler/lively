@@ -21,7 +21,7 @@ jobs:
     
     - name: Generate yumlmd
       id: generate_yumlmd
-      uses: maisiesadler/deptree@v1.0.2
+      uses: maisiesadler/deptree@v1.0.5
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
@@ -29,7 +29,7 @@ jobs:
 
     - name: Generate yuml
       id: generate_yuml
-      uses: maisiesadler/deptree@v1.0.2
+      uses: maisiesadler/deptree@v1.0.5
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
@@ -38,7 +38,7 @@ jobs:
     
     - name: Generate PlantUML
       id: generate_plantuml
-      uses: maisiesadler/deptree@v1.0.2
+      uses: maisiesadler/deptree@v1.0.5
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
@@ -47,7 +47,7 @@ jobs:
 
     - name: Generate Mermaid
       id: generate_mermaidmd
-      uses: maisiesadler/deptree@v1.0.2
+      uses: maisiesadler/deptree@v1.0.5
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'

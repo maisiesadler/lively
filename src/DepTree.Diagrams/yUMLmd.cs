@@ -9,52 +9,29 @@ namespace DepTree.Diagrams
         {
             var builder = new List<string>();
 
-            var relationships = new Dictionary<string, Dictionary<string, int>>();
-            foreach (var node in nodes)
-            {
-                AddAllNodes(relationships, node);
-            }
+            var (relationships, implementations) = FlattenedNodes.Create(nodes);
 
             foreach (var (nodeName, children) in relationships)
             {
                 foreach (var (childname, count) in children)
                 {
+                    var _childname = implementations.TryGetValue(childname, out var implementation)
+                        ? $"{childname}|{implementation}"
+                        : childname;
+
                     if (count == 1)
                     {
-                        builder.Add($"[{nodeName}]-&gt;[{childname}]");
+                        builder.Add($"[{nodeName}]-&gt;[{_childname}]");
                     }
                     else
                     {
-                        builder.Add($"[{nodeName}]-{count}&gt;[{childname}]");
+                        builder.Add($"[{nodeName}]-{count}&gt;[{_childname}]");
                     }
                 }
             }
 
             var img = string.Join(", ", builder);
             return $"<img src=\"http://yuml.me/diagram/scruffy/class/{img}\" />";
-        }
-
-        private static void AddAllNodes(Dictionary<string, Dictionary<string, int>> relationships, DependencyTreeNode node)
-        {
-            if (node.Children == null) return;
-
-            foreach (var child in node.Children)
-            {
-                var childname = child.Type?.Name;
-                if (child.Implementation != null) childname += "|" + child.Implementation.Name;
-                var nodename = node.Type?.Name;
-                if (!relationships.ContainsKey(nodename))
-                    relationships[nodename] = new Dictionary<string, int>();
-
-                var nodeRelationships = relationships[nodename];
-
-                if (!nodeRelationships.ContainsKey(childname))
-                    nodeRelationships[childname] = 0;
-
-                nodeRelationships[childname]++;
-
-                AddAllNodes(relationships, child);
-            }
         }
     }
 }

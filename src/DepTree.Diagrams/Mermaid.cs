@@ -13,24 +13,21 @@ namespace DepTree.Diagrams
             var builder = new StringBuilder();
             builder.AppendLine("classDiagram");
 
-            var relationships = new Dictionary<string, Dictionary<string, int>>();
-            var implementations = new Dictionary<string, string>();
-            foreach (var node in nodes)
-            {
-                AddAllNodes(relationships, implementations, node);
-            }
+            var (relationships, implementations) = FlattenedNodes.Create(nodes);
 
             foreach (var (nodeName, children) in relationships)
             {
+                var _nodeName = _invalidMermaidChars.Replace(nodeName, "");
                 foreach (var (childname, count) in children)
                 {
+                    var _childname = _invalidMermaidChars.Replace(childname, "");
                     if (count == 1)
                     {
-                        builder.AppendLine($"  {nodeName} --> {childname}");
+                        builder.AppendLine($"  {_nodeName} --> {_childname}");
                     }
                     else
                     {
-                        builder.AppendLine($"  {nodeName} --> \"{count}\" {childname}");
+                        builder.AppendLine($"  {_nodeName} --> \"{count}\" {_childname}");
                     }
                 }
             }
@@ -43,40 +40,6 @@ namespace DepTree.Diagrams
             }
 
             return builder.ToString();
-        }
-
-        private static void AddAllNodes(
-            Dictionary<string, Dictionary<string, int>> relationships,
-            Dictionary<string, string> implementations,
-            DependencyTreeNode node)
-        {
-            if (node.Children == null) return;
-
-            var nodename = node.Type?.Name;
-            nodename = _invalidMermaidChars.Replace(nodename, string.Empty);
-
-            foreach (var child in node.Children)
-            {
-                var childname = child.Type?.Name;
-                childname = _invalidMermaidChars.Replace(childname, string.Empty);
-
-                if (child.Implementation != null)
-                {
-                    implementations.TryAdd(childname, child.Implementation.Name);
-                }
-
-                if (!relationships.ContainsKey(nodename))
-                    relationships[nodename] = new Dictionary<string, int>();
-
-                var nodeRelationships = relationships[nodename];
-
-                if (!nodeRelationships.ContainsKey(childname))
-                    nodeRelationships[childname] = 0;
-
-                nodeRelationships[childname]++;
-
-                AddAllNodes(relationships, implementations, child);
-            }
         }
     }
 }

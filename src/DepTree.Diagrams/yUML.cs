@@ -13,51 +13,28 @@ namespace DepTree.Diagrams
 
 ");
 
-            var relationships = new Dictionary<string, Dictionary<string, int>>();
-            foreach (var node in nodes)
-            {
-                AddAllNodes(relationships, node);
-            }
+            var (relationships, implementations) = FlattenedNodes.Create(nodes);
 
             foreach (var (nodeName, children) in relationships)
             {
                 foreach (var (childname, count) in children)
                 {
+                    var _childname = implementations.TryGetValue(childname, out var implementation)
+                        ? $"{childname}|{implementation}"
+                        : childname;
+
                     if (count == 1)
                     {
-                        builder.AppendLine($"[{nodeName}]->[{childname}]");
+                        builder.AppendLine($"[{nodeName}]->[{_childname}]");
                     }
                     else
                     {
-                        builder.AppendLine($"[{nodeName}]-{count}>[{childname}]");
+                        builder.AppendLine($"[{nodeName}]-{count}>[{_childname}]");
                     }
                 }
             }
 
             return builder.ToString();
-        }
-
-        private static void AddAllNodes(Dictionary<string, Dictionary<string, int>> relationships, DependencyTreeNode node)
-        {
-            if (node.Children == null) return;
-
-            foreach (var child in node.Children)
-            {
-                var childname = child.Type?.Name;
-                if (child.Implementation != null) childname += "|" + child.Implementation.Name;
-                var nodename = node.Type?.Name;
-                if (!relationships.ContainsKey(nodename))
-                    relationships[nodename] = new Dictionary<string, int>();
-
-                var nodeRelationships = relationships[nodename];
-
-                if (!nodeRelationships.ContainsKey(childname))
-                    nodeRelationships[childname] = 0;
-
-                nodeRelationships[childname]++;
-
-                AddAllNodes(relationships, child);
-            }
         }
     }
 }
