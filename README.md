@@ -2,6 +2,7 @@
 
 [![Release Nuget Package](https://github.com/maisiesadler/deptree/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/release.yml)
 [![Generate Diagrams](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml)
+[![Use GitHub Action](https://github.com/maisiesadler/deptree/actions/workflows/github-action-tests.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/github-action-tests.yml)
 
 [![DepTree](https://img.shields.io/nuget/v/DepTree)](https://www.nuget.org/packages/DepTree/)
 [![DepTree.Diagrams](https://img.shields.io/nuget/v/DepTree.Diagrams)](https://www.nuget.org/packages/DepTree/Diagrams/)
