@@ -17,7 +17,7 @@ if [ $r -ne 0 ]; then
     exit $r
 fi
 
-result="${result//'%'/'%25'}"
+result="${result//$'%'/'%25'}"
 result="${result//$'\n'/'%0A'}"
 result="${result//$'\r'/'%0D'}"
 
