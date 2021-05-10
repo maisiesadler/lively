@@ -23,6 +23,50 @@ Available [here](https://github.com/marketplace/actions/generate-dependency-diag
 
 The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dockerfile](./Dockerfile) in the root of the project.
 
+Example outputs can be found [here](./example-outputs)
+
+### Example worflow
+
+```
+name: Use GitHub Action
+
+on: push
+
+jobs:
+
+  generate_examples:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-dotnet@v1
+
+    - name: Build project
+      run: dotnet build -c Release
+
+    - name: Generate yuml
+      id: generate_yuml
+      uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
+      env:
+        ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
+        ROOT_TYPES: 'DepTree.DependencyTree'
+        INTERFACE_RESOLVER: None
+        OUTPUT_FORMAT: yuml
+
+    - name: Write outputs to file
+      shell: bash
+      run: |
+        echo '${{ steps.generate_yuml.outputs.result }}' > example-outputs/yuml.yum
+
+    - uses: EndBug/add-and-commit@v7
+      name: Commit Changes
+      with:
+        default_author: github_actions
+        message: 'Generate diagrams'
+```
+
+### Configuration
+
 | Name | Environment Variable | CLI setting | | Required |
 | -- | -- | -- | -- | -- |
 | Assembly Location | `ASSEMBLY_LOCATION` | `-a` `--assembly` | The location of the assembly to read | Yes |

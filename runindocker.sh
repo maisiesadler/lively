@@ -1,6 +1,6 @@
 #!/bin/bash
 
-result=$(ASSEMBLY_LOCATION=$ASSEMBLY_LOCATION \
+result="$(ASSEMBLY_LOCATION=$ASSEMBLY_LOCATION \
   APPLICATION_CONFIG_LOCATION=$APPLICATION_CONFIG_LOCATION \
   ROOT_TYPES=$ROOT_TYPES \
   SKIP_TYPES=$SKIP_TYPES \
@@ -8,7 +8,7 @@ result=$(ASSEMBLY_LOCATION=$ASSEMBLY_LOCATION \
   INTERFACE_RESOLVER=$INTERFACE_RESOLVER \
   OUTPUT_FORMAT=$OUTPUT_FORMAT \
   STARTUP_NAME=$STARTUP_NAME \
-  dotnet /DepTree.Console.dll)
+  dotnet /DepTree.Console.dll)"
 
 r=$?
 if [ $r -ne 0 ]; then
@@ -16,5 +16,12 @@ if [ $r -ne 0 ]; then
     echo $result
     exit $r
 fi
+
+result="${result//'%'/'%25'}"
+result="${result//$'\n'/'%0A'}"
+result="${result//$'\r'/'%0D'}"
+
+echo "printing result"
+echo $result
 
 echo "::set-output name=result::$result"
