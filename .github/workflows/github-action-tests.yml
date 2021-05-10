@@ -40,7 +40,7 @@ jobs:
 
     - name: Generate yumlmd
       id: generate_yumlmd
-      uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
+      uses: maisiesadler/deptree@${{ needs.version.outputs.release }}'
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
@@ -52,7 +52,7 @@ jobs:
 
     - name: Generate yuml
       id: generate_yuml
-      uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
+      uses: maisiesadler/deptree@${{ needs.version.outputs.release }}'
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
