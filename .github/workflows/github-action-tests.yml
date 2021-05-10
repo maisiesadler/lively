@@ -29,10 +29,6 @@ jobs:
         ROOT_TYPES: 'DepTree.DependencyTree'
         INTERFACE_RESOLVER: None
 
-    - name: Output yumlmd
-      shell: bash
-      run: 
-
     - name: Generate yuml
       id: generate_yuml
       uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
