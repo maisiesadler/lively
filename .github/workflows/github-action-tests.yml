@@ -5,29 +5,12 @@ on:
     branches: [ gh-action-test ]
 
 jobs:
-  version:
-    name: Get Latest Tag
-    runs-on: ubuntu-latest
-    outputs:
-      release: ${{ steps.latest_tag.outputs.release }}
-
-    steps:
-      - id: latest_tag
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: ${{ github.repository }}
-          excludes: prerelease, draft
 
   build:
     runs-on: ubuntu-latest
-    needs: version
     
     steps:
     - uses: actions/checkout@v2
-
-    - name: 'Print version'
-      run: |
-        echo 'Using package version ${{ needs.version.outputs.release }}'
 
     - uses: actions/setup-dotnet@v1
       with:
@@ -38,9 +21,14 @@ jobs:
     - name: Build project
       run: dotnet build -c Release
 
+  generate_yumlmd:
+    runs-on: ubuntu-latest
+    needs: [build]
+    
+    steps:
     - name: Generate yumlmd
-      id: generate_yumlmd
-      uses: maisiesadler/deptree@${{ needs.version.outputs.release }}'
+      id: generate
+      uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
@@ -48,11 +36,16 @@ jobs:
 
     - name: Output yumlmd
       shell: bash
-      run: echo '${{ steps.generate_yumlmd.outputs.result }}' > example-outputs/yumlmd.md
+      run: echo '${{ steps.generate.outputs.result }}' > example-outputs/yumlmd.md
 
+  generate_yuml:
+    runs-on: ubuntu-latest
+    needs: [build]
+    
+    steps:
     - name: Generate yuml
-      id: generate_yuml
-      uses: maisiesadler/deptree@${{ needs.version.outputs.release }}'
+      id: generate
+      uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
       env:
         ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
         ROOT_TYPES: 'DepTree.DependencyTree'
@@ -61,8 +54,13 @@ jobs:
 
     - name: Output yuml
       shell: bash
-      run: echo '${{ steps.generate_yuml.outputs.result }}' > example-outputs/yuml.yuml
+      run: echo '${{ steps.generate.outputs.result }}' > example-outputs/yuml.yuml
 
+  commit:
+    runs-on: ubuntu-latest
+    needs: [generate_yumlmd, generate_yuml]
+    
+    steps:
     - uses: EndBug/add-and-commit@v7
       with:
         default_author: github_actions
