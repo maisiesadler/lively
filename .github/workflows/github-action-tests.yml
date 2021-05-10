@@ -1,8 +1,6 @@
 name: Use GitHub Action
 
-on:
-  push:
-    branches: [ gh-action-test ]
+on: push
 
 jobs:
 
