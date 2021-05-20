@@ -27,6 +27,11 @@ namespace DepTree.Resolvers
 
             var startup = CreateInstance(startupType, config.Configuration);
             MethodInfo method = startupType.GetMethod("ConfigureServices");
+            if (method == null)
+            {
+                throw new Exception("Startup does not have expected ConfigureServices method");
+            }
+
             _fakeServiceCollection = new FakeServiceCollection();
             method.Invoke(startup, new[] { _fakeServiceCollection });
 
@@ -51,5 +56,7 @@ namespace DepTree.Resolvers
 
             return _fakeServiceCollection.GetImplementation(t);
         }
+
+        public static IInterfaceResolver Create(DependencyTreeConfig config) => new StartupInterfaceResolver(config.StartupConfig);
     }
 }

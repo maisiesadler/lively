@@ -19,9 +19,9 @@ namespace DepTree
             if (config == null) throw new ArgumentNullException(nameof(config));
             Assembly = config.Assembly ?? throw new ArgumentNullException(nameof(config.Assembly));
             SkipTypes = config.SkipTypes;
-            InterfaceResolver = config.InterfaceResolverType == InterfaceResolverType.None
-                ? new NoInterfaceResolver()
-                : new StartupInterfaceResolver(config.StartupConfig);
+            InterfaceResolver = config.CreateInterfaceResolver == null
+                ? NoInterfaceResolver.Create()
+                : config.CreateInterfaceResolver(config);
         }
 
         public DependencyTreeNode GetDependencies(string typeName, string name = "root")

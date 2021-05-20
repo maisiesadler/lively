@@ -141,9 +141,29 @@ There are 2 output formats using [yUML](https://yuml.me/), `yuml` and `yumlmd`.
 There are a few vscode extensions that can be used to view the diagrams locally and a [chrome](https://github.com/BackMarket/github-mermaid-extension) extension that can be added to view the diagrams in GitHub.
 
 - `mermaid` - mermaid diagram
-- `mermaidmd` - mermaid diagram with ```mermaid ``` syntax that can be rendered by vscode/chrome extension in a markdown file
+- `mermaidmd` - mermaid diagram with `mermaid` syntax that can be rendered by vscode/chrome extension in a markdown file
 
 ## Nuget
 
 - [DepTree](https://www.nuget.org/packages/DepTree)
 - [DepTree.Diagrams](https://www.nuget.org/packages/DepTree.Diagrams)
+
+Create a custom application using the Nuget package.
+
+```
+var assemblyLocation = "...";
+var className = "YourAssembly.RootClassName";
+var assembly = Assembly.LoadFrom(assemblyLocation);
+var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration)
+{
+    // Add your own interface resolver
+    CreateInterfaceResolver = applicationConfig.CreateInterfaceResolver,
+    SkipTypes = applicationConfig.Skip,
+    StartupName = applicationConfig.StartupName,
+};
+
+var tree = new DependencyTree(config);
+var node = tree.GetDependencies(className);
+
+// Use diagrams package or create own output
+```

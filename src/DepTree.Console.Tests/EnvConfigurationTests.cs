@@ -1,6 +1,7 @@
 using Xunit;
 using DepTree.Console.Configuration;
 using DepTree.Resolvers;
+using System;
 
 namespace DepTree.Console.Tests
 {
@@ -87,10 +88,10 @@ namespace DepTree.Console.Tests
         }
 
         [Theory]
-        [InlineData("None", InterfaceResolverType.None)]
-        [InlineData("Startup", InterfaceResolverType.Startup)]
-        [InlineData("Beans", InterfaceResolverType.Startup)]
-        public void InterfaceResolverCanBeSet(string interfaceResolver, InterfaceResolverType expectedType)
+        [InlineData("None", typeof(NoInterfaceResolver))]
+        [InlineData("Startup", typeof(StartupInterfaceResolver))]
+        [InlineData("Beans", typeof(StartupInterfaceResolver))]
+        public void InterfaceResolverCanBeSet(string interfaceResolver, Type expectedType)
         {
             var provider = new TestEnvironmentVariableProvider
             {
@@ -100,7 +101,8 @@ namespace DepTree.Console.Tests
             var (config, ok) = ApplicationConfiguration.Build(provider, new string[] { });
 
             Assert.NotNull(config);
-            Assert.Equal(expectedType, config.InterfaceResolverType);
+            var resolver = config.CreateInterfaceResolver(new DependencyTreeConfig(GetType().Assembly));
+            Assert.Equal(expectedType, resolver.GetType());
         }
 
         [Fact]

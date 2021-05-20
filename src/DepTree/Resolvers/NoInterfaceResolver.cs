@@ -8,5 +8,7 @@ namespace DepTree.Resolvers
         {
             return null;
         }
+
+        public static IInterfaceResolver Create(DependencyTreeConfig config = null) => new NoInterfaceResolver();
     }
 }

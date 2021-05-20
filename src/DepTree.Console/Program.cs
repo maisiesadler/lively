@@ -23,7 +23,7 @@ namespace DepTree.Console
             var assembly = Assembly.LoadFrom(applicationConfig.AssemblyLocation);
             var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration)
             {
-                InterfaceResolverType = applicationConfig.InterfaceResolverType,
+                CreateInterfaceResolver = applicationConfig.CreateInterfaceResolver,
                 SkipTypes = applicationConfig.Skip,
                 StartupName = applicationConfig.StartupName,
             };

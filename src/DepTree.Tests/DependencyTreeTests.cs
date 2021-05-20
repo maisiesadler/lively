@@ -1,4 +1,5 @@
 using System;
+using DepTree.Resolvers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -7,6 +8,26 @@ namespace DepTree.Tests
 {
     public class DependencyTreeTests
     {
+        [Fact]
+        public void NullConfigThrowsException()
+        {
+            DependencyTreeConfig config = null;
+
+            Assert.Throws<ArgumentNullException>(() => new DependencyTree(config));
+        }
+
+        [Fact]
+        public void NullInterfaceResolverDefaultsToNone()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
+            config.CreateInterfaceResolver = null;
+
+            var tree = new DependencyTree(config);
+
+            Assert.Equal(typeof(NoInterfaceResolver), tree.InterfaceResolver.GetType());
+        }
+
         [Fact]
         public void GivenAssemblyAndClassNameDependencyTreeCreated()
         {

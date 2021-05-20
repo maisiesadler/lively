@@ -20,7 +20,7 @@ namespace DepTree.Console.Configuration
         public HashSet<string> Skip { get; private set; } = new HashSet<string>();
         public List<string> Generate { get; private set; } = new List<string>();
         public List<string> Errors { get; private set; } = new List<string>();
-        public InterfaceResolverType InterfaceResolverType { get; private set; } = Resolvers.InterfaceResolverType.Startup;
+        public Func<DependencyTreeConfig, IInterfaceResolver> CreateInterfaceResolver { get; set; } = StartupInterfaceResolver.Create;
         public string StartupName { get; private set; } = "Startup";
         public OutputFormatType OutputFormat { get; private set; } = OutputFormatType.YumlMd;
         public bool IsValid => Errors.Count == 0;
@@ -148,9 +148,9 @@ namespace DepTree.Console.Configuration
         private void TrySetInterfaceResolver(string value)
         {
             if (value == "None")
-                InterfaceResolverType = Resolvers.InterfaceResolverType.None;
+                CreateInterfaceResolver = NoInterfaceResolver.Create;
             else if (value == "Startup")
-                InterfaceResolverType = Resolvers.InterfaceResolverType.Startup;
+                CreateInterfaceResolver = StartupInterfaceResolver.Create;
         }
 
         private void TrySetOutputFormat(string value)
