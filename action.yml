@@ -1,5 +1,5 @@
-name: 'Generate dependency diagrams'
-description: 'Generate dependency class diagrams in UML or mermaid format'
+name: 'Lively'
+description: 'Generate Living Documentation'
 branding:
   icon: bar-chart-2
   color: gray-dark

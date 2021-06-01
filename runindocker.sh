@@ -8,7 +8,7 @@ result="$(ASSEMBLY_LOCATION=$ASSEMBLY_LOCATION \
   INTERFACE_RESOLVER=$INTERFACE_RESOLVER \
   OUTPUT_FORMAT=$OUTPUT_FORMAT \
   STARTUP_NAME=$STARTUP_NAME \
-  dotnet /DepTree.Console.dll)"
+  dotnet /Lively.Console.dll)"
 
 r=$?
 if [ $r -ne 0 ]; then

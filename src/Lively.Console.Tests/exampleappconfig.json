@@ -1,0 +1,9 @@
+{
+  "Skip": [
+    "Serilog.IDiagnosticContext"
+  ],
+  "Generate": [
+    "Lively.DependencyTree",
+    "Lively.AnotherRootType"
+  ]
+}

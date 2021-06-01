@@ -1,13 +1,15 @@
-# Dependency Tree
+# Lively
 
-[![Release Nuget Package](https://github.com/maisiesadler/deptree/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/release.yml)
-[![Generate Diagrams](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/generate-diagrams.yml)
-[![Use GitHub Action](https://github.com/maisiesadler/deptree/actions/workflows/github-action-tests.yml/badge.svg)](https://github.com/maisiesadler/deptree/actions/workflows/github-action-tests.yml)
+_Living Documentation_
 
-[![DepTree](https://img.shields.io/nuget/v/DepTree)](https://www.nuget.org/packages/DepTree/)
-[![DepTree.Diagrams](https://img.shields.io/nuget/v/DepTree.Diagrams)](https://www.nuget.org/packages/DepTree/Diagrams/)
+[![Release Nuget Package](https://github.com/maisiesadler/lively/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/release.yml)
+[![Generate Diagrams](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml)
+[![Use GitHub Action](https://github.com/maisiesadler/lively/actions/workflows/github-action-tests.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/github-action-tests.yml)
 
-Dependency Tree uses reflection to automatically create a tree of class dependencies for given types in an assembly.
+[![Lively](https://img.shields.io/nuget/v/Lively)](https://www.nuget.org/packages/Lively/)
+[![Lively.Diagrams](https://img.shields.io/nuget/v/Lively.Diagrams)](https://www.nuget.org/packages/Lively/Diagrams/)
+
+Lively uses reflection to automatically create a tree of class dependencies for given types in an assembly.
 It is available as a [GitHub Action](#using-the-github-action) and a [Nuget](#nuget) package.
 
 By default it uses the Startup file to load and resolve which type is registered to an interface.
@@ -47,10 +49,10 @@ jobs:
 
     - name: Generate yuml
       id: generate_yuml
-      uses: maisiesadler/deptree@v1.0.3-gh-action-test.0
+      uses: maisiesadler/lively@v1.0.3-gh-action-test.0
       env:
-        ASSEMBLY_LOCATION: './src/DepTree/bin/Release/net5.0/DepTree.dll'
-        ROOT_TYPES: 'DepTree.DependencyTree'
+        ASSEMBLY_LOCATION: './src/Lively/bin/Release/net5.0/Lively.dll'
+        ROOT_TYPES: 'Lively.DependencyTree'
         INTERFACE_RESOLVER: None
         OUTPUT_FORMAT: yuml
 
@@ -93,11 +95,13 @@ If the Startup file has an IConfiguration constructor then set the `Assembly Con
 
 If there is no startup then set `Interface Resolver` to `None`.
 
-The Startup file name can be overriden to either the type Name or FullName. E.g. `TestStartup` or `DepTree.MultipleApplications.Startup`.
+The Startup file name can be overriden to either the type Name or FullName. E.g. `TestStartup` or `Lively.MultipleApplications.Startup`.
 
 ### Example applications
 
 #### Pokedex - dotnet5 web api
+
+[Example workflow](https://github.com/maisiesadler/pokedex/blob/main/.github/workflows/dependencytree.yml)
 
 - Needed to publish a single file application `dotnet publish -r linux-x64 -p:PublishSingleFile=true -p:UseAppHost=true --self-contained`
 - Need to add RuntimeIdentifiers [here](https://github.com/maisiesadler/pokedex/blob/main/src/Pokedex/Pokedex.csproj#L5).
@@ -106,15 +110,13 @@ The Startup file name can be overriden to either the type Name or FullName. E.g.
 
 <img src="http://yuml.me/diagram/scruffy/class/[PokemonController]-&gt;[BasicPokemonInformationRetriever], [PokemonController]-&gt;[TranslatedPokemonInformationRetriever], [PokemonController]-&gt;[ILogger`1], [BasicPokemonInformationRetriever]-&gt;[IPokemonQuery|PokemonQuery], [IPokemonQuery]-2&gt;[ICache`1], [IPokemonQuery]-2&gt;[IPokeApiClient], [TranslatedPokemonInformationRetriever]-&gt;[IPokemonQuery|PokemonQuery], [TranslatedPokemonInformationRetriever]-&gt;[ITranslationQuery|TranslationQuery], [ITranslationQuery]-&gt;[ICache`1], [ITranslationQuery]-&gt;[IFunTranslationsApiClient], [ITranslationQuery]-&gt;[ILogger`1]" />
 
-[Example workflow](https://github.com/maisiesadler/pokedex/blob/main/.github/workflows/dependencytree.yml)
-
 #### Endpoints - doesn't use Startup
+
+[Example workflow](https://github.com/maisiesadler/Endpoints/blob/master/.github/workflows/dependencytree.yml)
 
 [Example output](https://github.com/maisiesadler/Endpoints/blob/master/Dependencies.md)
 
 <img src="http://yuml.me/diagram/scruffy/class/[MyModelRetriever]-&gt;[IDbThing]" />
-
-[Example workflow action](https://github.com/maisiesadler/Endpoints/blob/master/.github/workflows/dependencytree.yml)
 
 ## Output formats
 
@@ -145,8 +147,8 @@ There are a few vscode extensions that can be used to view the diagrams locally 
 
 ## Nuget
 
-- [DepTree](https://www.nuget.org/packages/DepTree)
-- [DepTree.Diagrams](https://www.nuget.org/packages/DepTree.Diagrams)
+- [Lively](https://www.nuget.org/packages/Lively)
+- [Lively.Diagrams](https://www.nuget.org/packages/Lively.Diagrams)
 
 Create a custom application using the Nuget package.
 

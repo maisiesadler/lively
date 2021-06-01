@@ -1,12 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build-env
 
 COPY . ./
-RUN dotnet publish ./src/DepTree.Console/DepTree.Console.csproj -c Release -o out --no-self-contained
+RUN dotnet publish ./src/Lively.Console/Lively.Console.csproj -c Release -o out --no-self-contained
 
 # Label the container
 LABEL maintainer="Maisie Sadler <maisie.sadler>"
-LABEL repository="https://github.com/maisiesadler/deptree"
-LABEL homepage="https://github.com/maisiesadler/deptree"
+LABEL repository="https://github.com/maisiesadler/lively"
+LABEL homepage="https://github.com/maisiesadler/lively"
 
 LABEL com.github.actions.name="The name of your GitHub Action"
 LABEL com.github.actions.description="The description of your GitHub Action."

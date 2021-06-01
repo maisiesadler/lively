@@ -39,26 +39,26 @@ jobs:
 
     - name: Test
       run: dotnet test
-      working-directory: ./src/DepTree.Tests
+      working-directory: ./src/Lively.Tests
 
     - name: Build project
       run: dotnet build -c Release
 
     - name: Generate a NuGet package
       run: dotnet pack --no-build -c Release -o . /p:PackageVersion=${{ needs.create-tag.outputs.new_version }}
-      working-directory: ./src/DepTree
+      working-directory: ./src/Lively
 
     - name: Push to GitHub package registry
       run: dotnet nuget push *.nupkg --api-key ${{secrets.NUGET_AUTH_TOKEN}}
-      working-directory: ./src/DepTree
+      working-directory: ./src/Lively
 
     - name: Generate a NuGet package
       run: dotnet pack --no-build -c Release -o . /p:PackageVersion=${{ needs.create-tag.outputs.new_version }}
-      working-directory: ./src/DepTree.Diagrams
+      working-directory: ./src/Lively.Diagrams
 
     - name: Push to GitHub package registry
       run: dotnet nuget push *.nupkg --api-key ${{secrets.NUGET_AUTH_TOKEN}}
-      working-directory: ./src/DepTree.Diagrams
+      working-directory: ./src/Lively.Diagrams
 
   create-release:
     name: Create Release
