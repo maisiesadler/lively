@@ -3,6 +3,6 @@
     "Serilog.IDiagnosticContext"
   ],
   "Generate": [
-    "DepTree.DependencyTree"
+    "Lively.DependencyTree"
   ]
 }

@@ -1,7 +1,5 @@
 # Lively
 
-_Living Documentation_
-
 [![Release Nuget Package](https://github.com/maisiesadler/lively/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/release.yml)
 [![Generate Diagrams](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml)
 [![Use GitHub Action](https://github.com/maisiesadler/lively/actions/workflows/github-action-tests.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/github-action-tests.yml)
@@ -9,18 +7,25 @@ _Living Documentation_
 [![Lively](https://img.shields.io/nuget/v/Lively)](https://www.nuget.org/packages/Lively/)
 [![Lively.Diagrams](https://img.shields.io/nuget/v/Lively.Diagrams)](https://www.nuget.org/packages/Lively/Diagrams/)
 
-Lively uses reflection to automatically create a tree of class dependencies for given types in an assembly.
-It is available as a [GitHub Action](#using-the-github-action) and a [Nuget](#nuget) package.
-
-By default it uses the Startup file to load and resolve which type is registered to an interface.
-
-There are a few different [output formats](#output-formats) that can be configured, the default is `yumlmd`.
+_Living Documentation_
 
 [Example yumlmd ouput](./DependencyTree.md) for this repository:
 
 <img src="http://yuml.me/diagram/scruffy/class/[DependencyTree]-&gt;[DependencyTreeConfig], [DependencyTreeConfig]-&gt;[Assembly], [DependencyTreeConfig]-&gt;[IConfiguration], [DependencyTreeConfig]-&gt;[HashSet`1], [DependencyTreeConfig]-&gt;[String]" />
 
-## Using the github action
+## How does it work?
+
+Lively uses reflection to create a tree of class dependencies for given types in an assembly.
+
+By default it uses the Startup file to load and resolve which type is registered to an interface.
+
+There are a few different [output formats](#output-formats) that can be configured, the default is `yumlmd`.
+
+## How can I use it?
+
+It is available as a [GitHub Action](#github-action) and a [Nuget](#nuget) package.
+
+### GitHub Action
 
 Available [here](https://github.com/marketplace/actions/generate-dependency-diagrams).
 
@@ -28,7 +33,7 @@ The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dock
 
 Example outputs can be found [here](./example-outputs)
 
-### Example worflow
+#### Example worflow
 
 ```
 name: Use GitHub Action
@@ -68,6 +73,33 @@ jobs:
         message: 'Generate diagrams'
 ```
 
+### Nuget
+
+- [Lively](https://www.nuget.org/packages/Lively)
+- [Lively.Diagrams](https://www.nuget.org/packages/Lively.Diagrams)
+
+Create a custom application using the Nuget package.
+
+```
+var assemblyLocation = "...";
+var className = "YourAssembly.RootClassName";
+var assembly = Assembly.LoadFrom(assemblyLocation);
+var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration)
+{
+    // Add your own interface resolver
+    CreateInterfaceResolver = new CustomInterfaceResolver(),
+    SkipTypes = new HashSet<string> { "Microsoft.Extensions.Options.IOptions" },
+    StartupName = "CustomStartupName",
+};
+
+var tree = new DependencyTree(config);
+var node = tree.GetDependencies(className);
+
+// Use diagrams package or create own output
+var diagram = MermaidMd.Create(new [] { node });
+System.Console.WriteLine(diagram);
+```
+
 ### Configuration
 
 | Name | Environment Variable | CLI setting | | Required |
@@ -81,13 +113,13 @@ jobs:
 | [Output Format](#output-format) | `OUTPUT_FORMAT` | `--output-format` | Format to print out the result. Allowed values: `debug`, `yumlmd`, `yuml`, `mermaid`, `mermaidmd`, `plantuml`. Default: `yumlmd`. | No |
 | [Application Config Location](#application-config) | `APPLICATION_CONFIG_LOCATION` | `-c` `--config` | The location of application config file | No |
 
-### Application config
+#### Application config
 
 There is support for passing in a config file for multiple `Skip` or `Generate` (root) types.
 
 [Example](./applicationconfig.json)
 
-### Interface Resolver Type
+#### Interface Resolver Type
 
 If `Interface Resolver` is `Startup` (default) then the application will look for a class named Startup.
 
@@ -96,6 +128,33 @@ If the Startup file has an IConfiguration constructor then set the `Assembly Con
 If there is no startup then set `Interface Resolver` to `None`.
 
 The Startup file name can be overriden to either the type Name or FullName. E.g. `TestStartup` or `Lively.MultipleApplications.Startup`.
+
+### Diagrams
+
+`yumlmd` is the default output format for the GitHub Action
+
+#### UML
+
+##### yUML
+
+There are 2 output formats using [yUML](https://yuml.me/), `yuml` and `yumlmd`.
+
+- `yuml` - creates a yUML diagram that can be parsed by [this](https://marketplace.visualstudio.com/items?itemName=JaimeOlivares.yuml) vscode extension which produces a SVG
+- `yumlmd` - creates a URL that is dynamically created into an image by yuml.me which can then be displayed in a html document
+
+##### PlantUML
+
+[PlantUML](https://plantuml.com/class-diagram)
+
+- `plantuml`
+
+#### Mermaid
+
+[Mermaid](https://mermaid-js.github.io/) is a javascript based diagramming and charting tool.
+There are a few vscode extensions that can be used to view the diagrams locally and a [chrome](https://github.com/BackMarket/github-mermaid-extension) extension that can be added to view the diagrams in GitHub.
+
+- `mermaid` - mermaid diagram
+- `mermaidmd` - mermaid diagram with `mermaid` syntax that can be rendered by vscode/chrome extension in a markdown file
 
 ### Example applications
 
@@ -117,55 +176,3 @@ The Startup file name can be overriden to either the type Name or FullName. E.g.
 [Example output](https://github.com/maisiesadler/Endpoints/blob/master/Dependencies.md)
 
 <img src="http://yuml.me/diagram/scruffy/class/[MyModelRetriever]-&gt;[IDbThing]" />
-
-## Output formats
-
-`yumlmd` is the default.
-
-### UML
-
-### yUML
-
-There are 2 output formats using [yUML](https://yuml.me/), `yuml` and `yumlmd`.
-
-- `yuml` - creates a yUML diagram that can be parsed by [this](https://marketplace.visualstudio.com/items?itemName=JaimeOlivares.yuml) vscode extension which produces a SVG
-- `yumlmd` - creates a URL that is dynamically created into an image by yuml.me which can then be displayed in a html document
-
-#### PlantUML
-
-[PlantUML](https://plantuml.com/class-diagram)
-
-- `plantuml`
-
-### Mermaid
-
-[Mermaid](https://mermaid-js.github.io/) is a javascript based diagramming and charting tool.
-There are a few vscode extensions that can be used to view the diagrams locally and a [chrome](https://github.com/BackMarket/github-mermaid-extension) extension that can be added to view the diagrams in GitHub.
-
-- `mermaid` - mermaid diagram
-- `mermaidmd` - mermaid diagram with `mermaid` syntax that can be rendered by vscode/chrome extension in a markdown file
-
-## Nuget
-
-- [Lively](https://www.nuget.org/packages/Lively)
-- [Lively.Diagrams](https://www.nuget.org/packages/Lively.Diagrams)
-
-Create a custom application using the Nuget package.
-
-```
-var assemblyLocation = "...";
-var className = "YourAssembly.RootClassName";
-var assembly = Assembly.LoadFrom(assemblyLocation);
-var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration)
-{
-    // Add your own interface resolver
-    CreateInterfaceResolver = applicationConfig.CreateInterfaceResolver,
-    SkipTypes = applicationConfig.Skip,
-    StartupName = applicationConfig.StartupName,
-};
-
-var tree = new DependencyTree(config);
-var node = tree.GetDependencies(className);
-
-// Use diagrams package or create own output
-```
