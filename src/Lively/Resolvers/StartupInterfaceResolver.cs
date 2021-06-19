@@ -13,12 +13,13 @@ namespace Lively.Resolvers
         public StartupInterfaceResolver(StartupInterfaceResolverConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
-            if (config.Assembly == null) throw new ArgumentNullException(nameof(config.Assembly));
+            if (config.Assemblies == null) throw new ArgumentNullException(nameof(config.Assemblies));
 
-            var startupType = config.Assembly.GetTypes().FirstOrDefault(x => x.FullName == config.StartupName);
+            var assemblyTypes = config.AssemblyTypes;
+            var startupType = assemblyTypes.FirstOrDefault(x => x.FullName == config.StartupName);
             if (startupType == null)
             {
-                startupType = config.Assembly.GetTypes().FirstOrDefault(x => x.Name == config.StartupName);
+                startupType = assemblyTypes.FirstOrDefault(x => x.Name == config.StartupName);
             }
             if (startupType == null)
             {

@@ -1,5 +1,6 @@
 using Xunit;
 using System;
+using System.Reflection;
 
 namespace Lively.Tests
 {
@@ -8,7 +9,22 @@ namespace Lively.Tests
         [Fact]
         public void NullAssemblyThrows()
         {
-            Assert.Throws<ArgumentNullException>(() => new DependencyTreeConfig(null));
+            Assembly assembly = null;
+            Assert.Throws<ArgumentNullException>(() => new DependencyTreeConfig(assembly));
+        }
+
+        [Fact]
+        public void NoAssemblyThrows()
+        {
+            var assemblies = new Assembly[] { };
+            Assert.Throws<InvalidOperationException>(() => new DependencyTreeConfig(assemblies));
+        }
+
+        [Fact]
+        public void NoNonNullAssemblyThrows()
+        {
+            var assemblies = new Assembly[] { null };
+            Assert.Throws<InvalidOperationException>(() => new DependencyTreeConfig(assemblies));
         }
 
         [Fact]
