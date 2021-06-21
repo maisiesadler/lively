@@ -20,12 +20,12 @@ namespace Lively.Tests
             Assert.Throws<InvalidOperationException>(() => new DependencyTreeConfig(assemblies));
         }
 
-        [Fact]
-        public void NoNonNullAssemblyThrows()
-        {
-            var assemblies = new Assembly[] { null };
-            Assert.Throws<InvalidOperationException>(() => new DependencyTreeConfig(assemblies));
-        }
+        // [Fact]
+        // public void NoNonNullAssemblyThrows()
+        // {
+        //     var assemblies = new Assembly[] { null };
+        //     Assert.Throws<InvalidOperationException>(() => new DependencyTreeConfig(assemblies));
+        // }
 
         [Fact]
         public void StartupNotSpecifiedDefaultIsStartup()

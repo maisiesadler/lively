@@ -10,7 +10,7 @@ namespace Lively
     {
         private readonly int _maxDepth = 100;
 
-        public IList<Assembly> Assemblies { get; }
+        public IReadOnlyList<Assembly> Assemblies { get; }
         public IInterfaceResolver InterfaceResolver { get; }
         public HashSet<string> SkipTypes { get; set; }
 

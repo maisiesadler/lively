@@ -8,7 +8,7 @@ namespace Lively.Resolvers
 {
     public class StartupInterfaceResolverConfig
     {
-        public IList<Assembly> Assemblies { get; set; }
+        public IReadOnlyList<Assembly> Assemblies { get; set; }
         public IConfiguration Configuration { get; set; }
         public HashSet<string> SkipTypes { get; set; }
         public string StartupName { get; set; } = "Startup";

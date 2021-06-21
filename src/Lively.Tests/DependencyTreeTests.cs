@@ -1,5 +1,6 @@
 using System;
 using Lively.Resolvers;
+using Lively.TypeDescriptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -186,6 +187,47 @@ namespace Lively.Tests
             Assert.Equal("ExampleTypeWithRecursiveDeps", node.Type.Name);
             Assert.Equal(DependencyTreeError.TooManyLayers, node.Error);
             Assert.Null(node.Children);
+        }
+
+        [Fact]
+        public void FindTypeInAnotherAssemblyNotReferenced_DoesNotWork()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
+            var testTypeName = "Lively.Tests.DependencyTreeTests+ExampleType";
+            var livelyTypeName = "Lively.DependencyTreeConfig";
+
+            var tree = new DependencyTree(config);
+            var testTypeDepTree = tree.GetDependencies(testTypeName);
+            var livelyTypeDepTree = tree.GetDependencies(livelyTypeName);
+
+            Assert.NotNull(testTypeDepTree);
+            var testTypeDescription = Assert.IsType<ConcreteTypeDescription>(testTypeDepTree.Type);
+            Assert.Equal("Lively.Tests.DependencyTreeTests+ExampleType", testTypeDescription.FullName);
+            Assert.NotNull(livelyTypeDepTree);
+            var livelyTypeDescription = Assert.IsType<UnknownTypeDescription>(livelyTypeDepTree.Type);
+            Assert.Equal("Lively.DependencyTreeConfig", livelyTypeDescription.FullName);
+        }
+
+        [Fact]
+        public void LoadMultipleAssembliesAndFindTypes()
+        {
+            var testAssembly = this.GetType().Assembly;
+            var livelyAssembly = typeof(DependencyTreeConfig).Assembly;
+            var config = new DependencyTreeConfig(new[] { testAssembly, livelyAssembly });
+            var testTypeName = "Lively.Tests.DependencyTreeTests+ExampleType";
+            var livelyTypeName = "Lively.DependencyTreeConfig";
+
+            var tree = new DependencyTree(config);
+            var testTypeDepTree = tree.GetDependencies(testTypeName);
+            var livelyTypeDepTree = tree.GetDependencies(livelyTypeName);
+
+            Assert.NotNull(testTypeDepTree);
+            var testTypeDescription = Assert.IsType<ConcreteTypeDescription>(testTypeDepTree.Type);
+            Assert.Equal("Lively.Tests.DependencyTreeTests+ExampleType", testTypeDescription.FullName);
+            Assert.NotNull(livelyTypeDepTree);
+            var livelyTypeDescription = Assert.IsType<ConcreteTypeDescription>(livelyTypeDepTree.Type);
+            Assert.Equal("Lively.DependencyTreeConfig", livelyTypeDescription.FullName);
         }
 
         public class ExampleTypeWithDeps
