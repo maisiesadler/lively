@@ -10,14 +10,14 @@ namespace Lively
     {
         private readonly int _maxDepth = 100;
 
-        public Assembly Assembly { get; }
+        public IReadOnlyList<Assembly> Assemblies { get; }
         public IInterfaceResolver InterfaceResolver { get; }
         public HashSet<string> SkipTypes { get; set; }
 
         public DependencyTree(DependencyTreeConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
-            Assembly = config.Assembly ?? throw new ArgumentNullException(nameof(config.Assembly));
+            Assemblies = config.Assemblies ?? throw new ArgumentNullException(nameof(config.Assemblies));
             SkipTypes = config.SkipTypes;
             InterfaceResolver = config.CreateInterfaceResolver == null
                 ? NoInterfaceResolver.Create()
@@ -31,8 +31,7 @@ namespace Lively
 
         private DependencyTreeNode GetDependencies(string typeName, string name, int depth)
         {
-            var type = Assembly.GetType(typeName);
-            if (type == null)
+            if (!TryFindType(typeName, out var type))
             {
                 var td = new UnknownTypeDescription(typeName);
                 return new DependencyTreeNode(name, td, DependencyTreeError.UnknownType);
@@ -91,6 +90,18 @@ namespace Lively
             }
 
             return (children, null);
+        }
+
+        private bool TryFindType(string typeName, out Type type)
+        {
+            foreach (var assembly in Assemblies)
+            {
+                type = assembly.GetType(typeName);
+                if (type != null) return true;
+            }
+
+            type = null;
+            return false;
         }
 
         private static Type NonGenericTypeName(Type type)

@@ -8,7 +8,7 @@ namespace Lively
 {
     public class DependencyTreeConfig
     {
-        public Assembly Assembly { get; }
+        public IReadOnlyList<Assembly> Assemblies { get; }
         public IConfiguration Configuration { get; }
         public string StartupName { get; set; } = "Startup";
         public HashSet<string> SkipTypes { get; set; }
@@ -17,14 +17,20 @@ namespace Lively
         public DependencyTreeConfig(
             Assembly assembly,
             IConfiguration configuration = null)
+            : this(new[] { assembly ?? throw new ArgumentNullException(nameof(assembly)) }, configuration) { }
+
+        public DependencyTreeConfig(
+            IReadOnlyList<Assembly> assemblies,
+            IConfiguration configuration = null)
         {
-            Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
+            Assemblies = assemblies ?? throw new ArgumentNullException(nameof(assemblies));
+            if (Assemblies.Count == 0) throw new InvalidOperationException();
             Configuration = configuration;
         }
 
         public StartupInterfaceResolverConfig StartupConfig => new StartupInterfaceResolverConfig
         {
-            Assembly = Assembly,
+            Assemblies = Assemblies,
             Configuration = Configuration,
             StartupName = StartupName,
             SkipTypes = SkipTypes,
