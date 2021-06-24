@@ -2,8 +2,5 @@
 
 class DependencyTree
 DependencyTree ---> DependencyTreeConfig
-class DependencyTreeConfig
-DependencyTreeConfig ---> Assembly
-DependencyTreeConfig ---> IConfiguration
 
 @enduml
