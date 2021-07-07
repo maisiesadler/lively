@@ -13,6 +13,7 @@ namespace Lively.Console.Tests
             var provider = new TestEnvironmentVariableProvider
             {
                 { "ASSEMBLY_LOCATION", "assembly-location" },
+                { "ASSEMBLY_PATTERN_MATCH", "Lively." },
                 { "ROOT_TYPES", "type" }
             };
 
@@ -22,6 +23,7 @@ namespace Lively.Console.Tests
             var type = Assert.Single(config.Generate);
             Assert.Equal("type", type);
             Assert.Equal("assembly-location", config.AssemblyLocation);
+            Assert.Equal("Lively.", config.AssemblyPatternMatch);
         }
 
         [Fact]

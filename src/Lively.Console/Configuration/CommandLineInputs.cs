@@ -6,8 +6,13 @@ namespace Lively.Console.Configuration
     {
         [Option('a', "assembly",
             Required = false,
-            HelpText = "The location of the assembly to read")]
+            HelpText = "The assembly file location or directory containing assemblies to load")]
         public string AssemblyLocation { get; set; } = null!;
+
+        [Option("pattern-match",
+            Required = false,
+            HelpText = "Regex pattern of assemblies to load in directory")]
+        public string AssemblyPatternMatch { get; set; } = null!;
 
         [Option("assembly-config",
             Required = false,

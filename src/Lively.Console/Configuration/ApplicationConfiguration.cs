@@ -17,6 +17,7 @@ namespace Lively.Console.Configuration
 
         public IConfiguration AssemblyConfiguration { get; private set; }
         public string AssemblyLocation { get; private set; }
+        public string AssemblyPatternMatch { get; private set; }
         public HashSet<string> Skip { get; private set; } = new HashSet<string>();
         public List<string> Generate { get; private set; } = new List<string>();
         public List<string> Errors { get; private set; } = new List<string>();
@@ -43,7 +44,8 @@ namespace Lively.Console.Configuration
 
         private void Validate()
         {
-            if (string.IsNullOrEmpty(AssemblyLocation) || !File.Exists(AssemblyLocation))
+            if (string.IsNullOrEmpty(AssemblyLocation)
+                || (!File.Exists(AssemblyLocation) && !Directory.Exists(AssemblyLocation)))
             {
                 Errors.Add($"Assembly Location '{AssemblyLocation}' is missing or invalid");
             }
@@ -52,6 +54,7 @@ namespace Lively.Console.Configuration
         private void ReadEnvironmentVariables(IEnvironmentVariableProvider environmentVariableProvider)
         {
             AssemblyLocation = environmentVariableProvider.GetEnvironmentVariable("ASSEMBLY_LOCATION");
+            AssemblyPatternMatch = environmentVariableProvider.GetEnvironmentVariable("ASSEMBLY_PATTERN_MATCH");
             _assemblyConfigLocation = environmentVariableProvider.GetEnvironmentVariable("ASSEMBLY_CONFIG_LOCATION");
             _configLocation = environmentVariableProvider.GetEnvironmentVariable("APPLICATION_CONFIG_LOCATION");
             TrySetInterfaceResolver(environmentVariableProvider.GetEnvironmentVariable("INTERFACE_RESOLVER"));
@@ -81,6 +84,9 @@ namespace Lively.Console.Configuration
             {
                 if (!string.IsNullOrWhiteSpace(inputs.AssemblyLocation))
                     AssemblyLocation = inputs.AssemblyLocation;
+
+                if (!string.IsNullOrWhiteSpace(inputs.AssemblyPatternMatch))
+                    AssemblyPatternMatch = inputs.AssemblyPatternMatch;
 
                 if (!string.IsNullOrWhiteSpace(inputs.InterfaceResolver))
                     TrySetInterfaceResolver(inputs.InterfaceResolver);

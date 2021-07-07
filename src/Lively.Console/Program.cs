@@ -2,6 +2,9 @@
 using System.Reflection;
 using Lively.Diagrams;
 using Lively.Console.Configuration;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Lively.Console
 {
@@ -9,7 +12,6 @@ namespace Lively.Console
     {
         static int Main(string[] args)
         {
-            // System.Console.WriteLine(string.Join(", ", args));
             var envProvider = new EnvironmentVariableProvider();
             var (applicationConfig, ok) = ApplicationConfiguration.Build(envProvider, args);
             if (!ok)
@@ -18,10 +20,14 @@ namespace Lively.Console
                 return -1;
             }
 
-            // System.Console.WriteLine(JsonSerializer.Serialize(applicationConfig));
+            var (assembliesOk, assemblies) = TryBuildAssemblies(applicationConfig);
+            if (!assembliesOk)
+            {
+                System.Console.WriteLine($"Could not load assemblies from {applicationConfig.AssemblyLocation}");
+                return -1;
+            }
 
-            var assembly = Assembly.LoadFrom(applicationConfig.AssemblyLocation);
-            var config = new DependencyTreeConfig(assembly, applicationConfig.AssemblyConfiguration)
+            var config = new DependencyTreeConfig(assemblies, applicationConfig.AssemblyConfiguration)
             {
                 CreateInterfaceResolver = applicationConfig.CreateInterfaceResolver,
                 SkipTypes = applicationConfig.Skip,
@@ -75,6 +81,35 @@ namespace Lively.Console
             }
 
             return 0;
+        }
+
+        private static (bool, Assembly[]) TryBuildAssemblies(ApplicationConfiguration config)
+        {
+            if (string.IsNullOrEmpty(config.AssemblyLocation))
+                return (false, null);
+
+            if (File.Exists(config.AssemblyLocation))
+            {
+                var assembly = Assembly.LoadFrom(config.AssemblyLocation);
+                return (true, new[] { assembly });
+            }
+            else if (Directory.Exists(config.AssemblyLocation))
+            {
+                var assemblies = DependencyTreeConfigExtensions.GetAllAssembliesInDirectory(
+                    config.AssemblyLocation,
+                    filename =>
+                    {
+                        if (string.IsNullOrWhiteSpace(config.AssemblyPatternMatch))
+                            return true;
+
+                        var split = filename.Split('/');
+                        var assemblyName = split[split.Length - 1];
+                        return Regex.IsMatch(assemblyName, config.AssemblyPatternMatch);
+                    }).ToArray();
+                return (true, assemblies);
+            }
+
+            return (false, null);
         }
 
         private static void Print(DependencyTreeNode node, string indent = "")
