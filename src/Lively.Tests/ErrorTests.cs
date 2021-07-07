@@ -25,7 +25,7 @@ namespace Lively.Tests
         }
 
         [Theory]
-        [InlineData("Lively.Tests.ErrorTests+ExampleTypeTooMany")]
+        // [InlineData("Lively.Tests.ErrorTests+ExampleTypeTooMany")]
         [InlineData("Lively.Tests.ErrorTests+ExampleTypePrivateOnly")]
         public void IncorrectConstructors(string fullTypeName)
         {
@@ -58,14 +58,14 @@ namespace Lively.Tests
             Assert.Null(depTree.Error);
             var childdep = Assert.Single(depTree.Children);
 
-            Assert.Equal("tooMany", childdep.Name);
-            Assert.Equal("Lively.Tests.ErrorTests+ExampleTypeTooMany", childdep.Type.FullName);
+            Assert.Equal("privateOnly", childdep.Name);
+            Assert.Equal("Lively.Tests.ErrorTests+ExampleTypePrivateOnly", childdep.Type.FullName);
             Assert.Equal(DependencyTreeError.IncorrectConstructors, childdep.Error);
         }
 
         public class ExampleWithErrorDep
         {
-            public ExampleWithErrorDep(ExampleTypeTooMany tooMany) { }
+            public ExampleWithErrorDep(ExampleTypePrivateOnly privateOnly) { }
         }
 
         public class ExampleTypeTooMany

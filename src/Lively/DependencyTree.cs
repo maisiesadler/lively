@@ -72,7 +72,7 @@ namespace Lively
         {
             var ctors = type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
 
-            if (ctors.Length != 1)
+            if (ctors.Length == 0)
             {
                 return (null, DependencyTreeError.IncorrectConstructors);
             }
