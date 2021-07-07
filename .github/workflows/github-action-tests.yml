@@ -21,7 +21,7 @@ jobs:
     
     - name: Generate yumlmd
       id: generate_yumlmd
-      uses: maisiesadler/lively@v1.0.5
+      uses: maisiesadler/lively@v1.0.15
       env:
         ASSEMBLY_LOCATION: './src/Lively/bin/Release/net5.0/Lively.dll'
         ROOT_TYPES: 'Lively.DependencyTree'
@@ -29,7 +29,7 @@ jobs:
 
     - name: Generate yuml
       id: generate_yuml
-      uses: maisiesadler/lively@v1.0.5
+      uses: maisiesadler/lively@v1.0.15
       env:
         ASSEMBLY_LOCATION: './src/Lively/bin/Release/net5.0/Lively.dll'
         ROOT_TYPES: 'Lively.DependencyTree'
@@ -38,7 +38,7 @@ jobs:
     
     - name: Generate PlantUML
       id: generate_plantuml
-      uses: maisiesadler/lively@v1.0.5
+      uses: maisiesadler/lively@v1.0.15
       env:
         ASSEMBLY_LOCATION: './src/Lively/bin/Release/net5.0/Lively.dll'
         ROOT_TYPES: 'Lively.DependencyTree'
@@ -47,7 +47,7 @@ jobs:
 
     - name: Generate Mermaid
       id: generate_mermaidmd
-      uses: maisiesadler/lively@v1.0.5
+      uses: maisiesadler/lively@v1.0.15
       env:
         ASSEMBLY_LOCATION: './src/Lively/bin/Release/net5.0/Lively.dll'
         ROOT_TYPES: 'Lively.DependencyTree'
