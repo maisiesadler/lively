@@ -10,7 +10,7 @@ title: 'Lively 🌳'
 [![Lively](https://img.shields.io/nuget/v/Lively)](https://www.nuget.org/packages/Lively/)
 [![Lively.Diagrams](https://img.shields.io/nuget/v/Lively.Diagrams)](https://www.nuget.org/packages/Lively/Diagrams/)
 
-_Living Documentation_
+_Living Documentation 🌳_
 
 [Example yumlmd ouput](./DependencyTree.md) for this repository:
 
