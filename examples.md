@@ -7,3 +7,7 @@ permalink: /URL-PATH/
 # Examples
 
 - One
+
+* TOC
+{:toc}
+
