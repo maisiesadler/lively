@@ -1,4 +1,7 @@
-# Lively 🌳
+---
+layout: default
+title: 'Lively 🌳'
+---
 
 [![Release Nuget Package](https://github.com/maisiesadler/lively/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/release.yml)
 [![Generate Diagrams](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml)
