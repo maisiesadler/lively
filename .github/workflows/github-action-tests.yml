@@ -1,6 +1,8 @@
 name: Use GitHub Action
 
-on: push
+on:
+  push:
+    branches: [ test-pr ]
 
 jobs:
 
@@ -62,8 +64,13 @@ jobs:
         echo '${{ steps.generate_plantuml.outputs.result }}' > example-outputs/plantuml.puml
         echo '${{ steps.generate_mermaidmd.outputs.result }}' > example-outputs/mermaidmd.md
 
-    - uses: EndBug/add-and-commit@v7
-      name: Commit Changes
+    # - uses: EndBug/add-and-commit@v7
+    #   name: Commit Changes
+    #   with:
+    #     default_author: github_actions
+    #     message: 'Generate diagrams'
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
       with:
-        default_author: github_actions
-        message: 'Generate diagrams'
+        title: 'Generate diagrams'
