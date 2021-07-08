@@ -3,13 +3,6 @@ layout: default
 title: 'Lively 🌳'
 ---
 
-[![Release Nuget Package](https://github.com/maisiesadler/lively/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/release.yml)
-[![Generate Diagrams](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml)
-[![Use GitHub Action](https://github.com/maisiesadler/lively/actions/workflows/github-action-tests.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/github-action-tests.yml)
-
-[![Lively](https://img.shields.io/nuget/v/Lively)](https://www.nuget.org/packages/Lively/)
-[![Lively.Diagrams](https://img.shields.io/nuget/v/Lively.Diagrams)](https://www.nuget.org/packages/Lively/Diagrams/)
-
 _Living Documentation 🌳_
 
 [Example yumlmd ouput](./DependencyTree.md) for this repository:
