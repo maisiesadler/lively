@@ -1,6 +1,8 @@
+---
 layout: page
-title: "PAGE TITLE"
+title: 'Tag Index'
 permalink: /URL-PATH/
+---
 
 # Examples
 
