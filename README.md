@@ -1,4 +1,4 @@
-# Lively
+# Lively 🌳
 
 [![Release Nuget Package](https://github.com/maisiesadler/lively/actions/workflows/release.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/release.yml)
 [![Generate Diagrams](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml/badge.svg)](https://github.com/maisiesadler/lively/actions/workflows/generate-diagrams.yml)
@@ -104,7 +104,8 @@ System.Console.WriteLine(diagram);
 
 | Name | Environment Variable | CLI setting | | Required |
 | -- | -- | -- | -- | -- |
-| Assembly Location | `ASSEMBLY_LOCATION` | `-a` `--assembly` | The location of the assembly to read | Yes |
+| Assembly Location | `ASSEMBLY_LOCATION` | `-a` `--assembly` | The assembly file location or directory containing assemblies to load | Yes |
+| Assembly Pattern Match | `ASSEMBLY_PATTERN_MATCH` | `--pattern-match` | Regex pattern of assemblies to load in directory | No |
 | Root types | `ROOT_TYPES` | `-t` `--root-types` | The root type to use for the dependency tree, multiple values can be used as a csv input | Yes |
 | Skip types | `SKIP_TYPES` | `-s` `--skip-types` | Types to not include in diagram, multiple values can be used as a csv input | No |
 | Assembly Config Location | `ASSEMBLY_CONFIG_LOCATION` | `--assembly-config` | The location of the configuration file required to build IConfiguration for Startup | No |
