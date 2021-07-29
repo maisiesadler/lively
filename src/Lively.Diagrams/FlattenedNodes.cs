@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
+using Lively.TypeDescriptions;
 
 namespace Lively.Diagrams
 {
     internal class FlattenedNodes
     {
         private readonly Dictionary<string, Dictionary<string, int>> _relationships = new Dictionary<string, Dictionary<string, int>>();
-        private readonly Dictionary<string, string> _implementations = new Dictionary<string, string>();
+        private readonly Dictionary<string, ITypeDescription> _typeDescriptions = new Dictionary<string, ITypeDescription>();
+        private readonly Dictionary<string, ITypeDescription> _implementations = new Dictionary<string, ITypeDescription>();
 
         private FlattenedNodes() { }
 
         public void Deconstruct(
             out IReadOnlyDictionary<string, Dictionary<string, int>> relationships,
-            out IReadOnlyDictionary<string, string> implementations)
+            out IReadOnlyDictionary<string, ITypeDescription> typeDescriptions,
+            out IReadOnlyDictionary<string, ITypeDescription> implementations)
         {
             relationships = _relationships;
+            typeDescriptions = _typeDescriptions;
             implementations = _implementations;
         }
 
@@ -35,13 +39,17 @@ namespace Lively.Diagrams
 
             foreach (var child in node.Children)
             {
-                var childname = child.Type?.Name;
+                var childname = child.Type?.FullName;
+
+                _typeDescriptions.TryAdd(childname, child.Type);
                 if (child.Implementation != null)
                 {
-                    _implementations.TryAdd(childname, child.Implementation.Name);
+                    _implementations.TryAdd(childname, child.Implementation);
                 }
 
-                var nodename = node.Type?.Name;
+                var nodename = node.Type?.FullName;
+                _typeDescriptions.TryAdd(nodename, node.Type);
+
                 if (!_relationships.ContainsKey(nodename))
                     _relationships[nodename] = new Dictionary<string, int>();
 

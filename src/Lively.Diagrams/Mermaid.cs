@@ -13,11 +13,12 @@ namespace Lively.Diagrams
             var builder = new StringBuilder();
             builder.AppendLine("classDiagram");
 
-            var (relationships, implementations) = FlattenedNodes.Create(nodes);
+            var (relationships, types, implementations) = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, children) in relationships)
+            foreach (var (nodeFullName, children) in relationships)
             {
-                var _nodeName = _invalidMermaidChars.Replace(nodeName, "");
+                var type = types[nodeFullName];
+                var _nodeName = _invalidMermaidChars.Replace(type.Name, "");
                 foreach (var (childname, count) in children)
                 {
                     var _childname = _invalidMermaidChars.Replace(childname, "");

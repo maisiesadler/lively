@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using Lively.TypeDescriptions;
 
 namespace Lively.Diagrams
 {
@@ -11,20 +12,21 @@ namespace Lively.Diagrams
             builder.AppendLine("@startuml");
             builder.AppendLine();
 
-            var (relationships, implementations) = FlattenedNodes.Create(nodes);
+            var (relationships, types, implementations) = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, children) in relationships)
+            foreach (var (nodeFullName, children) in relationships)
             {
-                builder.AppendLine($"class {nodeName}");
+                var node = types[nodeFullName];
+                AppendClass(builder, node);
                 foreach (var (childname, count) in children)
                 {
                     if (count == 1)
                     {
-                        builder.AppendLine($"{nodeName} ---> {childname}");
+                        builder.AppendLine($"{nodeFullName} ---> {childname}");
                     }
                     else
                     {
-                        builder.AppendLine($"{nodeName} ---> \"2\" {childname}");
+                        builder.AppendLine($"{nodeFullName} ---> \"{count}\" {childname}");
                     }
                 }
             }
@@ -34,17 +36,29 @@ namespace Lively.Diagrams
                 builder.AppendLine();
             }
 
-            foreach (var (@interface, implementation) in implementations)
+            foreach (var (interfaceFullName, implementation) in implementations)
             {
-                builder.AppendLine($"interface {@interface} {{");
-                builder.AppendLine($"  {implementation}");
+                builder.AppendLine($"interface {interfaceFullName} {{");
+                builder.AppendLine($"  {implementation.Name}");
                 builder.AppendLine("}");
+
+                AppendClass(builder, implementation);
+
+                builder.AppendLine($"{implementation.FullName} ---> {interfaceFullName}");
             }
 
             builder.AppendLine();
             builder.AppendLine("@enduml");
 
             return builder.ToString();
+        }
+
+        private static void AppendClass(StringBuilder builder, ITypeDescription typeDescription)
+        {
+            builder.AppendLine("class " + typeDescription.FullName + " {");
+            foreach (var method in typeDescription.Methods)
+                builder.AppendLine($"  +{method.Name}()");
+            builder.AppendLine("}");
         }
     }
 }
