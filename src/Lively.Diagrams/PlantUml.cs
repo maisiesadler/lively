@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Lively.TypeDescriptions;
 
@@ -12,39 +13,39 @@ namespace Lively.Diagrams
             builder.AppendLine("@startuml");
             builder.AppendLine();
 
-            var (relationships, types, implementations) = FlattenedNodes.Create(nodes);
+            var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeFullName, children) in relationships)
+            foreach (var (nodeName, nodeFullName, methods, children) in flattenedNodes.Relationships())
             {
-                var node = types[nodeFullName];
-                AppendClass(builder, node);
-                foreach (var (childname, count) in children)
+                AppendClass(builder, nodeName, methods);
+                foreach (var (childname, childFullName, childPlusImpl, count) in children)
                 {
                     if (count == 1)
                     {
-                        builder.AppendLine($"{nodeFullName} ---> {childname}");
+                        builder.AppendLine($"{nodeName} ---> {childname}");
                     }
                     else
                     {
-                        builder.AppendLine($"{nodeFullName} ---> \"{count}\" {childname}");
+                        builder.AppendLine($"{nodeName} ---> \"{count}\" {childname}");
                     }
                 }
             }
+
+            var implementations = flattenedNodes.Implementations().ToList();
 
             if (implementations.Count > 0)
             {
                 builder.AppendLine();
             }
 
-            foreach (var (interfaceFullName, implementation) in implementations)
+            foreach (var (interfaceName, interfaceFullName, implementation) in implementations)
             {
-                builder.AppendLine($"interface {interfaceFullName} {{");
-                builder.AppendLine($"  {implementation.Name}");
+                builder.AppendLine($"interface {interfaceName} {{");
                 builder.AppendLine("}");
 
-                AppendClass(builder, implementation);
+                AppendClass(builder, implementation.Name, implementation.Methods);
 
-                builder.AppendLine($"{implementation.FullName} ---> {interfaceFullName}");
+                builder.AppendLine($"{interfaceName} <--- {implementation.Name}");
             }
 
             builder.AppendLine();
@@ -53,10 +54,10 @@ namespace Lively.Diagrams
             return builder.ToString();
         }
 
-        private static void AppendClass(StringBuilder builder, ITypeDescription typeDescription)
+        private static void AppendClass(StringBuilder builder, string nodeName, IReadOnlyList<TypeMethod> methods)
         {
-            builder.AppendLine("class " + typeDescription.FullName + " {");
-            foreach (var method in typeDescription.Methods)
+            builder.AppendLine("class " + nodeName + " {");
+            foreach (var method in methods)
                 builder.AppendLine($"  +{method.Name}()");
             builder.AppendLine("}");
         }

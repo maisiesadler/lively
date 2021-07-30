@@ -3,6 +3,11 @@ using Lively.TypeDescriptions;
 
 namespace Lively.Diagrams
 {
+    internal record Relationship(string NodeName, string NodeFullName, IReadOnlyList<TypeMethod> Methods, IReadOnlyList<RelationshipChild> Children);
+    internal record RelationshipChild(string NodeName, string NodeFullName, string NodePlusImplementation, int Count);
+
+    internal record Implementation(string InterfaceName, string InterfaceFullName, ITypeDescription ImplementationType);
+
     internal class FlattenedNodes
     {
         private readonly Dictionary<string, Dictionary<string, int>> _relationships = new Dictionary<string, Dictionary<string, int>>();
@@ -11,14 +16,38 @@ namespace Lively.Diagrams
 
         private FlattenedNodes() { }
 
-        public void Deconstruct(
-            out IReadOnlyDictionary<string, Dictionary<string, int>> relationships,
-            out IReadOnlyDictionary<string, ITypeDescription> typeDescriptions,
-            out IReadOnlyDictionary<string, ITypeDescription> implementations)
+        public IEnumerable<Relationship> Relationships()
         {
-            relationships = _relationships;
-            typeDescriptions = _typeDescriptions;
-            implementations = _implementations;
+            foreach (var (nodeFullName, children) in _relationships)
+            {
+                var node= _typeDescriptions[nodeFullName];
+                var relChildren = new List<RelationshipChild>();
+                foreach (var (childFullName, count) in children)
+                {
+                    var childName = _typeDescriptions.TryGetValue(childFullName, out var childType)
+                        ? childType.Name
+                        : childFullName;
+
+                    var nodePlusImpl = _implementations.TryGetValue(childFullName, out var implementation)
+                        ? $"{childName}|{implementation.Name}"
+                        : childName;
+
+                    relChildren.Add(new RelationshipChild(childName, childFullName, nodePlusImpl, count));
+                }
+
+                yield return new Relationship(node.Name, nodeFullName, node.Methods, relChildren);
+            }
+        }
+
+        public IEnumerable<Implementation> Implementations()
+        {
+            foreach (var (interfaceFullName, implementationType) in _implementations)
+            {
+                var interfaceName = _typeDescriptions.TryGetValue(interfaceFullName, out var interfaceType)
+                    ? interfaceType.Name
+                    : interfaceFullName;
+                yield return new Implementation(interfaceName, interfaceFullName, implementationType);
+            }
         }
 
         public static FlattenedNodes Create(IList<DependencyTreeNode> nodes)

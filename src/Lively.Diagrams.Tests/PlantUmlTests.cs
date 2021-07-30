@@ -21,7 +21,8 @@ namespace Lively.Diagrams.Tests
 
             var expected = @"@startuml
 
-class ExampleTypeWithDeps
+class ExampleTypeWithDeps {
+}
 ExampleTypeWithDeps ---> ExampleType
 
 @enduml";
@@ -44,13 +45,15 @@ ExampleTypeWithDeps ---> ExampleType
             var diagram = PlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
-
-class ExampleTypeWithInterfaceDeps
+class ExampleTypeWithInterfaceDeps {
+}
 ExampleTypeWithInterfaceDeps ---> ExampleInterface
 
 interface ExampleInterface {
-  ExampleImplementation
 }
+class ExampleImplementation {
+}
+ExampleInterface <--- ExampleImplementation
 
 @enduml";
 
@@ -73,12 +76,15 @@ interface ExampleInterface {
 
             var expected = @"@startuml
 
-class ExampleTypeWithInterfaceDeps
+class ExampleTypeWithInterfaceDeps {
+}
 ExampleTypeWithInterfaceDeps ---> ""2"" ExampleInterface
 
 interface ExampleInterface {
-  ExampleImplementation
 }
+class ExampleImplementation {
+}
+ExampleInterface <--- ExampleImplementation
 
 @enduml";
 
@@ -98,7 +104,8 @@ interface ExampleInterface {
 
             var expected = @"@startuml
 
-class ExampleTypeWithGenericDeps
+class ExampleTypeWithGenericDeps {
+}
 ExampleTypeWithGenericDeps ---> ExampleGenericType`2
 
 @enduml";
