@@ -15,20 +15,20 @@ namespace Lively.Diagrams
 
             var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, nodeFullName, methods, children) in flattenedNodes.Relationships())
+            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
             {
-                var _nodeFullName = NormalisePlantUml(nodeFullName);
-                AppendClass(builder, _nodeFullName, methods);
-                foreach (var (childname, childFullName, childPlusImpl, count) in children)
+                var nodeFullName = NormalisePlantUml(nodeType.FullName);
+                AppendClass(builder, nodeFullName, nodeType.Methods);
+                foreach (var (childType, childImplementationType, count) in children)
                 {
-                    var _childFullName = NormalisePlantUml(childFullName);
+                    var childFullName = NormalisePlantUml(childType.FullName);
                     if (count == 1)
                     {
-                        builder.AppendLine($"{_nodeFullName} ---> {_childFullName}");
+                        builder.AppendLine($"{nodeFullName} ---> {childFullName}");
                     }
                     else
                     {
-                        builder.AppendLine($"{_nodeFullName} ---> \"{count}\" {_childFullName}");
+                        builder.AppendLine($"{nodeFullName} ---> \"{count}\" {childFullName}");
                     }
                 }
             }
@@ -40,16 +40,16 @@ namespace Lively.Diagrams
                 builder.AppendLine();
             }
 
-            foreach (var (interfaceName, interfaceFullName, implementation) in implementations)
+            foreach (var (interfaceType, implementationType) in implementations)
             {
-                var _interfaceFullName = NormalisePlantUml(interfaceFullName);
-                builder.AppendLine($"interface {_interfaceFullName} {{");
+                var interfaceFullName = NormalisePlantUml(interfaceType.FullName);
+                builder.AppendLine($"interface {interfaceFullName} {{");
                 builder.AppendLine("}");
 
-                var implementationFullName = NormalisePlantUml(implementation.FullName);
-                AppendClass(builder, implementationFullName, implementation.Methods);
+                var implementationFullName = NormalisePlantUml(implementationType.FullName);
+                AppendClass(builder, implementationFullName, implementationType.Methods);
 
-                builder.AppendLine($"{_interfaceFullName} <--- {implementationFullName}");
+                builder.AppendLine($"{interfaceFullName} <--- {implementationFullName}");
             }
 
             builder.AppendLine();

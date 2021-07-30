@@ -15,12 +15,12 @@ namespace Lively.Diagrams
 
             var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, nodeFullName, methods, children) in flattenedNodes.Relationships())
+            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
             {
-                AppendClass(builder, nodeName, methods);
-                foreach (var (childname, childFullName, childPlusImpl, count) in children)
+                AppendClass(builder, nodeType.Name, nodeType.Methods);
+                foreach (var (childType, childImplementationType, count) in children)
                 {
-                    AppendDependentRelationship(builder, nodeName, childname, count);
+                    AppendDependentRelationship(builder, nodeType.Name, childType.Name, count);
                 }
             }
 
@@ -31,9 +31,9 @@ namespace Lively.Diagrams
                 builder.AppendLine();
             }
 
-            foreach (var (interfaceName, interfaceFullName, implementation) in implementations)
+            foreach (var (interfaceType, implementationType) in implementations)
             {
-                AppendInterfaceImplementation(builder, interfaceName, implementation.Name, implementation.Methods);
+                AppendInterfaceImplementation(builder, interfaceType.Name, implementationType.Name, implementationType.Methods);
             }
 
             builder.AppendLine();

@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Lively.TypeDescriptions;
 
 namespace Lively.Diagrams
 {
-    internal record Relationship(string NodeName, string NodeFullName, IReadOnlyList<TypeMethod> Methods, IReadOnlyList<RelationshipChild> Children);
-    internal record RelationshipChild(string NodeName, string NodeFullName, string NodePlusImplementation, int Count);
+    internal record Relationship(ITypeDescription NodeType, ITypeDescription ImplementationType, IReadOnlyList<RelationshipChild> Children);
+    internal record RelationshipChild(ITypeDescription NodeType, ITypeDescription ImplementationType, int Count);
 
-    internal record Implementation(string InterfaceName, string InterfaceFullName, ITypeDescription ImplementationType);
+    internal record Implementation(ITypeDescription InterfaceType, ITypeDescription ImplementationType);
 
     internal class FlattenedNodes
     {
@@ -21,21 +22,20 @@ namespace Lively.Diagrams
             foreach (var (nodeFullName, children) in _relationships)
             {
                 var node = _typeDescriptions[nodeFullName];
+
+                _implementations.TryGetValue(nodeFullName, out var nodeImplementation);
+
                 var relChildren = new List<RelationshipChild>();
                 foreach (var (childFullName, count) in children)
                 {
-                    var childName = _typeDescriptions.TryGetValue(childFullName, out var childType)
-                        ? childType.Name
-                        : childFullName;
+                    if (!_typeDescriptions.TryGetValue(childFullName, out var childType))
+                        throw new InvalidOperationException($"Could not find child type {childFullName}");
+                    _implementations.TryGetValue(childFullName, out var childImplementation);
 
-                    var nodePlusImpl = _implementations.TryGetValue(childFullName, out var implementation)
-                        ? $"{childName}|{implementation.Name}"
-                        : childName;
-
-                    relChildren.Add(new RelationshipChild(childName, childFullName, nodePlusImpl, count));
+                    relChildren.Add(new RelationshipChild(childType, childImplementation, count));
                 }
 
-                yield return new Relationship(node.Name, nodeFullName, node.Methods, relChildren);
+                yield return new Relationship(node, nodeImplementation, relChildren);
             }
         }
 
@@ -43,10 +43,9 @@ namespace Lively.Diagrams
         {
             foreach (var (interfaceFullName, implementationType) in _implementations)
             {
-                var interfaceName = _typeDescriptions.TryGetValue(interfaceFullName, out var interfaceType)
-                    ? interfaceType.Name
-                    : interfaceFullName;
-                yield return new Implementation(interfaceName, interfaceFullName, implementationType);
+                if (!_typeDescriptions.TryGetValue(interfaceFullName, out var interfaceType))
+                    throw new InvalidOperationException($"Could not find interface type {interfaceType}");
+                yield return new Implementation(interfaceType, implementationType);
             }
         }
 

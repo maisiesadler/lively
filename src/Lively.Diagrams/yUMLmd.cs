@@ -11,17 +11,21 @@ namespace Lively.Diagrams
 
             var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, nodeFullName, methods, children) in flattenedNodes.Relationships())
+            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
             {
-                foreach (var (childname, childFullName, childPlusImpl, count) in children)
+                foreach (var (childType, childImplementationType, count) in children)
                 {
+                    var childPlusImpl = childType.Name;
+                    if (childImplementationType != null)
+                        childPlusImpl += $"|{childImplementationType.Name}";
+
                     if (count == 1)
                     {
-                        builder.Add($"[{nodeName}]-&gt;[{childPlusImpl}]");
+                        builder.Add($"[{nodeType.Name}]-&gt;[{childPlusImpl}]");
                     }
                     else
                     {
-                        builder.Add($"[{nodeName}]-{count}&gt;[{childPlusImpl}]");
+                        builder.Add($"[{nodeType.Name}]-{count}&gt;[{childPlusImpl}]");
                     }
                 }
             }

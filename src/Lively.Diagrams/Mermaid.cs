@@ -15,27 +15,27 @@ namespace Lively.Diagrams
 
             var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, nodeFullName, methods, children) in flattenedNodes.Relationships())
+            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
             {
-                var _nodeName = _invalidMermaidChars.Replace(nodeName, "");
-                foreach (var (childName, childFullName, childPlusImpl, count) in children)
+                var nodeName = _invalidMermaidChars.Replace(nodeType.Name, "");
+                foreach (var (childType, childImplementationType, count) in children)
                 {
-                    var _childname = _invalidMermaidChars.Replace(childName, "");
+                    var childName = _invalidMermaidChars.Replace(childType.Name, "");
                     if (count == 1)
                     {
-                        builder.AppendLine($"  {_nodeName} --> {_childname}");
+                        builder.AppendLine($"  {nodeName} --> {childName}");
                     }
                     else
                     {
-                        builder.AppendLine($"  {_nodeName} --> \"{count}\" {childName}");
+                        builder.AppendLine($"  {nodeName} --> \"{count}\" {childName}");
                     }
                 }
             }
 
-            foreach (var (interfaceName, interfaceFullName, implementation) in flattenedNodes.Implementations())
+            foreach (var (interfaceType, implementationType) in flattenedNodes.Implementations())
             {
-                builder.AppendLine($"  class {interfaceName} {{");
-                builder.AppendLine($"    {implementation.Name}");
+                builder.AppendLine($"  class {interfaceType.Name} {{");
+                builder.AppendLine($"    {implementationType.Name}");
                 builder.AppendLine("  }");
             }
 
