@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Lively.Diagrams.Tests
 {
-    public class PlantUmlTests
+    public class FullNamePlantUmlTests
     {
         private static Regex _whitespace = new Regex("[\r\n]+");
 
@@ -13,17 +13,17 @@ namespace Lively.Diagrams.Tests
         {
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
 
-class ExampleTypeWithDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithDeps {
 }
-ExampleTypeWithDeps ---> ExampleType
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithDeps ---> Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleType
 
 @enduml";
 
@@ -42,18 +42,18 @@ ExampleTypeWithDeps ---> ExampleType
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
-class ExampleTypeWithInterfaceDeps {
+class Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps {
 }
-ExampleTypeWithInterfaceDeps ---> ExampleInterface
+Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps ---> Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface
 
-interface ExampleInterface {
+interface Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface {
 }
-class ExampleImplementation {
+class Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation {
 }
-ExampleInterface <--- ExampleImplementation
+Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation
 
 @enduml";
 
@@ -72,19 +72,19 @@ ExampleInterface <--- ExampleImplementation
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree, depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree, depTree });
 
             var expected = @"@startuml
 
-class ExampleTypeWithInterfaceDeps {
+class Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps {
 }
-ExampleTypeWithInterfaceDeps ---> ""2"" ExampleInterface
+Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps ---> ""2"" Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface
 
-interface ExampleInterface {
+interface Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface {
 }
-class ExampleImplementation {
+class Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation {
 }
-ExampleInterface <--- ExampleImplementation
+Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation
 
 @enduml";
 
@@ -100,13 +100,13 @@ ExampleInterface <--- ExampleImplementation
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
 
-class ExampleTypeWithGenericDeps {
+class Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithGenericDeps {
 }
-ExampleTypeWithGenericDeps ---> ExampleGenericType2
+Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithGenericDeps ---> Lively.Diagrams.Tests.PlantUmlTests.ExampleGenericType2
 
 @enduml";
 

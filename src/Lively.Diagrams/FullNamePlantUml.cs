@@ -5,7 +5,7 @@ using Lively.TypeDescriptions;
 
 namespace Lively.Diagrams
 {
-    public class PlantUml
+    public class FullNamePlantUml
     {
         public static string Create(IList<DependencyTreeNode> nodes)
         {
@@ -17,10 +17,19 @@ namespace Lively.Diagrams
 
             foreach (var (nodeName, nodeFullName, methods, children) in flattenedNodes.Relationships())
             {
-                AppendClass(builder, nodeName, methods);
+                var _nodeFullName = NormalisePlantUml(nodeFullName);
+                AppendClass(builder, _nodeFullName, methods);
                 foreach (var (childname, childFullName, childPlusImpl, count) in children)
                 {
-                    AppendDependentRelationship(builder, nodeName, childname, count);
+                    var _childFullName = NormalisePlantUml(childFullName);
+                    if (count == 1)
+                    {
+                        builder.AppendLine($"{_nodeFullName} ---> {_childFullName}");
+                    }
+                    else
+                    {
+                        builder.AppendLine($"{_nodeFullName} ---> \"{count}\" {_childFullName}");
+                    }
                 }
             }
 
@@ -33,41 +42,20 @@ namespace Lively.Diagrams
 
             foreach (var (interfaceName, interfaceFullName, implementation) in implementations)
             {
-                AppendInterfaceImplementation(builder, interfaceName, implementation.Name, implementation.Methods);
+                var _interfaceFullName = NormalisePlantUml(interfaceFullName);
+                builder.AppendLine($"interface {_interfaceFullName} {{");
+                builder.AppendLine("}");
+
+                var implementationFullName = NormalisePlantUml(implementation.FullName);
+                AppendClass(builder, implementationFullName, implementation.Methods);
+
+                builder.AppendLine($"{_interfaceFullName} <--- {implementationFullName}");
             }
 
             builder.AppendLine();
             builder.AppendLine("@enduml");
 
             return builder.ToString();
-        }
-
-        private static void AppendDependentRelationship(StringBuilder builder, string parentName, string childName, int count)
-        {
-            parentName = NormalisePlantUml(parentName);
-            childName = NormalisePlantUml(childName);
-
-            if (count == 1)
-            {
-                builder.AppendLine($"{parentName} ---> {childName}");
-            }
-            else
-            {
-                builder.AppendLine($"{parentName} ---> \"{count}\" {childName}");
-            }
-        }
-
-        private static void AppendInterfaceImplementation(StringBuilder builder, string interfaceName, string implementationName, IReadOnlyList<TypeMethod> implementationMethods)
-        {
-            interfaceName = NormalisePlantUml(interfaceName);
-            implementationName = NormalisePlantUml(implementationName);
-
-            builder.AppendLine($"interface {interfaceName} {{");
-            builder.AppendLine("}");
-
-            AppendClass(builder, implementationName, implementationMethods);
-
-            builder.AppendLine($"{interfaceName} <--- {implementationName}");
         }
 
         private static void AppendClass(StringBuilder builder, string nodeName, IReadOnlyList<TypeMethod> methods)
