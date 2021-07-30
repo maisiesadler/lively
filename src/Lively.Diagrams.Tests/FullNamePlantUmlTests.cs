@@ -36,24 +36,24 @@ Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithDeps ---> Lively.Diag
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "Lively.Diagrams.Tests.PlantUmlTests+Startup",
+                StartupName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+Startup",
             };
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
             var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
-class Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps {
 }
-Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps ---> Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps ---> Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface
 
-interface Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface {
+interface Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface {
 }
-class Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation {
 }
-Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation
 
 @enduml";
 
@@ -66,9 +66,9 @@ Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "Lively.Diagrams.Tests.PlantUmlTests+Startup",
+                StartupName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+Startup",
             };
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
@@ -76,15 +76,15 @@ Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.
 
             var expected = @"@startuml
 
-class Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps {
 }
-Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithInterfaceDeps ---> ""2"" Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps ---> ""2"" Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface
 
-interface Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface {
+interface Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface {
 }
-class Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation {
 }
-Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.PlantUmlTests.ExampleImplementation
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation
 
 @enduml";
 
@@ -96,7 +96,7 @@ Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.
         {
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithGenericDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithGenericDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
@@ -104,9 +104,41 @@ Lively.Diagrams.Tests.PlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.
 
             var expected = @"@startuml
 
-class Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithGenericDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithGenericDeps {
 }
-Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithGenericDeps ---> Lively.Diagrams.Tests.PlantUmlTests.ExampleGenericType2
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithGenericDeps ---> Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleGenericType2
+
+@enduml";
+
+            Assert.Equal(Normalise(expected), Normalise(diagram));
+        }
+
+        [Fact]
+        public void CanCreateDiagramForDependencyWithImplementationAndMethods()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly)
+            {
+                StartupName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+Startup",
+            };
+            var fullTypeName = typeof(ExampleInterfaceWithMethods).FullName;
+
+            System.Console.WriteLine(fullTypeName);
+
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
+
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
+
+            var expected = @"@startuml
+interface Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterfaceWithMethods {
+}
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementationWithMethods {
+  +One()
+  +Beans()
+}
+
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterfaceWithMethods <--- Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementationWithMethods
 
 @enduml";
 
@@ -158,11 +190,24 @@ Lively.Diagrams.Tests.PlantUmlTests.ExampleTypeWithGenericDeps ---> Lively.Diagr
         {
         }
 
+        public interface ExampleInterfaceWithMethods
+        {
+            void One();
+            string Beans();
+        }
+
+        public class ExampleImplementationWithMethods : ExampleInterfaceWithMethods
+        {
+            public void One() { }
+            public string Beans() => "hello";
+        }
+
         public class Startup
         {
             public void ConfigureServices(IServiceCollection services)
             {
                 services.AddTransient<ExampleInterface, ExampleImplementation>();
+                services.AddTransient<ExampleInterfaceWithMethods, ExampleImplementationWithMethods>();
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Lively.Diagrams
         {
             foreach (var (nodeFullName, children) in _relationships)
             {
-                var node= _typeDescriptions[nodeFullName];
+                var node = _typeDescriptions[nodeFullName];
                 var relChildren = new List<RelationshipChild>();
                 foreach (var (childFullName, count) in children)
                 {
@@ -64,17 +64,18 @@ namespace Lively.Diagrams
 
         private void AddDependencyTreeNode(DependencyTreeNode node)
         {
+            var nodeFullName = node.Type.FullName;
+            _typeDescriptions.TryAdd(nodeFullName, node.Type);
+            if (node.Implementation != null)
+            {
+                _implementations.TryAdd(nodeFullName, node.Implementation);
+            }
+
             if (node.Children == null) return;
 
             foreach (var child in node.Children)
             {
                 var childname = child.Type?.FullName;
-
-                _typeDescriptions.TryAdd(childname, child.Type);
-                if (child.Implementation != null)
-                {
-                    _implementations.TryAdd(childname, child.Implementation);
-                }
 
                 var nodename = node.Type?.FullName;
                 _typeDescriptions.TryAdd(nodename, node.Type);

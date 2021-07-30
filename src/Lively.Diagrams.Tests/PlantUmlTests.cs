@@ -113,6 +113,38 @@ ExampleTypeWithGenericDeps ---> ExampleGenericType2
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
 
+        [Fact]
+        public void CanCreateDiagramForDependencyWithImplementationAndMethods()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly)
+            {
+                StartupName = "Lively.Diagrams.Tests.PlantUmlTests+Startup",
+            };
+            var fullTypeName = typeof(ExampleInterfaceWithMethods).FullName;
+
+            System.Console.WriteLine(fullTypeName);
+
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
+
+            var diagram = PlantUml.Create(new[] { depTree });
+
+            var expected = @"@startuml
+interface ExampleInterfaceWithMethods {
+}
+class ExampleImplementationWithMethods {
+  +One()
+  +Beans()
+}
+
+ExampleInterfaceWithMethods <--- ExampleImplementationWithMethods
+
+@enduml";
+
+            Assert.Equal(Normalise(expected), Normalise(diagram));
+        }
+
         private static string Normalise(string s)
         {
             return _whitespace.Replace(s, "\n").Trim();
@@ -158,11 +190,24 @@ ExampleTypeWithGenericDeps ---> ExampleGenericType2
         {
         }
 
+        public interface ExampleInterfaceWithMethods
+        {
+            void One();
+            string Beans();
+        }
+
+        public class ExampleImplementationWithMethods : ExampleInterfaceWithMethods
+        {
+            public void One() { }
+            public string Beans() => "hello";
+        }
+
         public class Startup
         {
             public void ConfigureServices(IServiceCollection services)
             {
                 services.AddTransient<ExampleInterface, ExampleImplementation>();
+                services.AddTransient<ExampleInterfaceWithMethods, ExampleImplementationWithMethods>();
             }
         }
     }
