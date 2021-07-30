@@ -9,23 +9,23 @@ namespace Lively.Diagrams
         {
             var builder = new List<string>();
 
-            var (relationships, implementations) = FlattenedNodes.Create(nodes);
+            var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, children) in relationships)
+            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
             {
-                foreach (var (childname, count) in children)
+                foreach (var (childType, childImplementationType, count) in children)
                 {
-                    var _childname = implementations.TryGetValue(childname, out var implementation)
-                        ? $"{childname}|{implementation}"
-                        : childname;
+                    var childPlusImpl = childType.Name;
+                    if (childImplementationType != null)
+                        childPlusImpl += $"|{childImplementationType.Name}";
 
                     if (count == 1)
                     {
-                        builder.Add($"[{nodeName}]-&gt;[{_childname}]");
+                        builder.Add($"[{nodeType.Name}]-&gt;[{childPlusImpl}]");
                     }
                     else
                     {
-                        builder.Add($"[{nodeName}]-{count}&gt;[{_childname}]");
+                        builder.Add($"[{nodeType.Name}]-{count}&gt;[{childPlusImpl}]");
                     }
                 }
             }

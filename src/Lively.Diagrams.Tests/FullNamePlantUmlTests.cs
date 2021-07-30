@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Lively.Diagrams.Tests
 {
-    public class PlantUmlTests
+    public class FullNamePlantUmlTests
     {
         private static Regex _whitespace = new Regex("[\r\n]+");
 
@@ -13,17 +13,17 @@ namespace Lively.Diagrams.Tests
         {
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
 
-class ExampleTypeWithDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithDeps {
 }
-ExampleTypeWithDeps ---> ExampleType
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithDeps ---> Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleType
 
 @enduml";
 
@@ -36,24 +36,24 @@ ExampleTypeWithDeps ---> ExampleType
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "Lively.Diagrams.Tests.PlantUmlTests+Startup",
+                StartupName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+Startup",
             };
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
-class ExampleTypeWithInterfaceDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps {
 }
-ExampleTypeWithInterfaceDeps ---> ExampleInterface
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps ---> Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface
 
-interface ExampleInterface {
+interface Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface {
 }
-class ExampleImplementation {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation {
 }
-ExampleInterface <--- ExampleImplementation
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation
 
 @enduml";
 
@@ -66,25 +66,25 @@ ExampleInterface <--- ExampleImplementation
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "Lively.Diagrams.Tests.PlantUmlTests+Startup",
+                StartupName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+Startup",
             };
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithInterfaceDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithInterfaceDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree, depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree, depTree });
 
             var expected = @"@startuml
 
-class ExampleTypeWithInterfaceDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps {
 }
-ExampleTypeWithInterfaceDeps ---> ""2"" ExampleInterface
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithInterfaceDeps ---> ""2"" Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface
 
-interface ExampleInterface {
+interface Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface {
 }
-class ExampleImplementation {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation {
 }
-ExampleInterface <--- ExampleImplementation
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterface <--- Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementation
 
 @enduml";
 
@@ -96,17 +96,17 @@ ExampleInterface <--- ExampleImplementation
         {
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly);
-            var fullTypeName = "Lively.Diagrams.Tests.PlantUmlTests+ExampleTypeWithGenericDeps";
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeWithGenericDeps";
 
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
-            var diagram = PlantUml.Create(new[] { depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
 
-class ExampleTypeWithGenericDeps {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithGenericDeps {
 }
-ExampleTypeWithGenericDeps ---> ExampleGenericType2
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithGenericDeps ---> Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleGenericType2
 
 @enduml";
 
@@ -119,7 +119,7 @@ ExampleTypeWithGenericDeps ---> ExampleGenericType2
             var assembly = this.GetType().Assembly;
             var config = new DependencyTreeConfig(assembly)
             {
-                StartupName = "Lively.Diagrams.Tests.PlantUmlTests+Startup",
+                StartupName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+Startup",
             };
             var fullTypeName = typeof(ExampleInterfaceWithMethods).FullName;
 
@@ -128,17 +128,17 @@ ExampleTypeWithGenericDeps ---> ExampleGenericType2
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
 
-            var diagram = PlantUml.Create(new[] { depTree });
+            var diagram = FullNamePlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
-interface ExampleInterfaceWithMethods {
+interface Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterfaceWithMethods {
 }
-class ExampleImplementationWithMethods {
+class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementationWithMethods {
   +One()
   +Beans()
 }
 
-ExampleInterfaceWithMethods <--- ExampleImplementationWithMethods
+Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterfaceWithMethods <--- Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementationWithMethods
 
 @enduml";
 

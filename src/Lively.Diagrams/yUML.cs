@@ -13,23 +13,23 @@ namespace Lively.Diagrams
 
 ");
 
-            var (relationships, implementations) = FlattenedNodes.Create(nodes);
+            var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeName, children) in relationships)
+            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
             {
-                foreach (var (childname, count) in children)
+                foreach (var (childType, childImplementationType, count) in children)
                 {
-                    var _childname = implementations.TryGetValue(childname, out var implementation)
-                        ? $"{childname}|{implementation}"
-                        : childname;
+                    var childPlusImpl = childType.Name;
+                    if (childImplementationType != null)
+                        childPlusImpl += $"|{childImplementationType.Name}";
 
                     if (count == 1)
                     {
-                        builder.AppendLine($"[{nodeName}]->[{_childname}]");
+                        builder.AppendLine($"[{nodeType.Name}]->[{childPlusImpl}]");
                     }
                     else
                     {
-                        builder.AppendLine($"[{nodeName}]-{count}>[{_childname}]");
+                        builder.AppendLine($"[{nodeType.Name}]-{count}>[{childPlusImpl}]");
                     }
                 }
             }

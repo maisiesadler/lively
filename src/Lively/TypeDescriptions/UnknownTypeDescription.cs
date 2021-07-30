@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -10,6 +12,8 @@ namespace Lively.TypeDescriptions
         public string FullName { get; }
 
         public string Name { get; }
+
+        public IReadOnlyList<TypeMethod> Methods => Array.Empty<TypeMethod>();
 
         public UnknownTypeDescription(string fullName)
         {
