@@ -40,10 +40,10 @@ namespace Lively.Diagrams.Tests
             var diagram = Mermaid.Create(new[] { depTree });
 
             var expected = @"classDiagram
-  ExampleTypeWithInterfaceDeps --> ExampleInterface
   class ExampleInterface {
     ExampleImplementation
-  }";
+  }
+  ExampleTypeWithInterfaceDeps --> ExampleInterface";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
@@ -63,10 +63,10 @@ namespace Lively.Diagrams.Tests
             var diagram = Mermaid.Create(new[] { depTree, depTree });
 
             var expected = @"classDiagram
-  ExampleTypeWithInterfaceDeps --> ""2"" ExampleInterface
   class ExampleInterface {
     ExampleImplementation
-  }";
+  }
+  ExampleTypeWithInterfaceDeps --> ""2"" ExampleInterface";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Lively.TypeDescriptions;
 
 namespace Lively.Diagrams
 {
@@ -15,31 +16,38 @@ namespace Lively.Diagrams
 
             var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
+            foreach (var (nodeType, implementationType) in flattenedNodes.TypesAndImplementations())
             {
+                if (implementationType != null)
+                    AppendImplementation(builder, nodeType, implementationType);
+            }
+
+            foreach (var (nodeType, childType, count) in flattenedNodes.Relationships())
+            {
+                var implementationType = flattenedNodes.Implementation(nodeType);
+                if (implementationType != null)
+                    AppendImplementation(builder, nodeType, implementationType);
+
                 var nodeName = _invalidMermaidChars.Replace(nodeType.Name, "");
-                foreach (var (childType, childImplementationType, count) in children)
+                var childName = _invalidMermaidChars.Replace(childType.Name, "");
+                if (count == 1)
                 {
-                    var childName = _invalidMermaidChars.Replace(childType.Name, "");
-                    if (count == 1)
-                    {
-                        builder.AppendLine($"  {nodeName} --> {childName}");
-                    }
-                    else
-                    {
-                        builder.AppendLine($"  {nodeName} --> \"{count}\" {childName}");
-                    }
+                    builder.AppendLine($"  {nodeName} --> {childName}");
+                }
+                else
+                {
+                    builder.AppendLine($"  {nodeName} --> \"{count}\" {childName}");
                 }
             }
 
-            foreach (var (interfaceType, implementationType) in flattenedNodes.Implementations())
-            {
-                builder.AppendLine($"  class {interfaceType.Name} {{");
-                builder.AppendLine($"    {implementationType.Name}");
-                builder.AppendLine("  }");
-            }
-
             return builder.ToString();
+        }
+
+        private static void AppendImplementation(StringBuilder builder, ITypeDescription nodeType, ITypeDescription implementationType)
+        {
+            builder.AppendLine($"  class {nodeType.Name} {{");
+            builder.AppendLine($"    {implementationType.Name}");
+            builder.AppendLine("  }");
         }
     }
 }

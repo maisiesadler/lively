@@ -23,30 +23,20 @@ namespace Lively.Diagrams
 
             var flattenedNodes = FlattenedNodes.Create(nodes);
 
-            foreach (var (nodeType, implementationType, children) in flattenedNodes.Relationships())
+            foreach (var (nodeType, implementationType) in flattenedNodes.TypesAndImplementations())
             {
-                var nodeTypeName = TypeNameSelector(nodeType);
-                AppendClass(builder, nodeTypeName, nodeType.Methods);
-                foreach (var (childType, childImplementationType, count) in children)
-                {
-                    var childTypeName = TypeNameSelector(childType);
-                    AppendDependentRelationship(builder, nodeTypeName, childTypeName, count);
-                }
+                AppendClassOrInterfaceImplementation(builder, nodeType, implementationType);
             }
 
-            var implementations = flattenedNodes.Implementations().ToList();
+            builder.AppendLine();
 
-            if (implementations.Count > 0)
+            foreach (var (nodeType, childType, count) in flattenedNodes.Relationships())
             {
-                builder.AppendLine();
-            }
+                var implementationType = flattenedNodes.Implementation(nodeType);
+                var nodeTypeName = TypeNameSelector(implementationType ?? nodeType);
+                var childTypeName = TypeNameSelector(childType);
 
-            foreach (var (interfaceType, implementationType) in implementations)
-            {
-                var interfaceTypeName = TypeNameSelector(interfaceType);
-                var implementationTypeName = TypeNameSelector(implementationType);
-
-                AppendInterfaceImplementation(builder, interfaceTypeName, implementationTypeName, implementationType.Methods);
+                AppendDependentRelationship(builder, nodeTypeName, childTypeName, count);
             }
 
             builder.AppendLine();
@@ -67,20 +57,30 @@ namespace Lively.Diagrams
             }
         }
 
-        private void AppendInterfaceImplementation(StringBuilder builder, string interfaceName, string implementationName, IReadOnlyList<TypeMethod> implementationMethods)
+        private void AppendClassOrInterfaceImplementation(StringBuilder builder, ITypeDescription nodeType, ITypeDescription implementationType)
         {
-            builder.AppendLine($"interface {interfaceName} {{");
+            if (implementationType == null)
+            {
+                AppendClass(builder, nodeType);
+                return;
+            }
+
+            var interfaceTypeName = TypeNameSelector(nodeType);
+            var implementationTypeName = TypeNameSelector(implementationType);
+
+            builder.AppendLine($"interface {interfaceTypeName} {{");
             builder.AppendLine("}");
 
-            AppendClass(builder, implementationName, implementationMethods);
+            AppendClass(builder, implementationType);
 
-            builder.AppendLine($"{interfaceName} <--- {implementationName}");
+            builder.AppendLine($"{interfaceTypeName} <--- {implementationTypeName}");
         }
 
-        private void AppendClass(StringBuilder builder, string nodeName, IReadOnlyList<TypeMethod> methods)
+        private void AppendClass(StringBuilder builder, ITypeDescription nodeType)
         {
+            var nodeName = TypeNameSelector(nodeType);
             builder.AppendLine("class " + nodeName + " {");
-            foreach (var method in methods)
+            foreach (var method in nodeType.Methods)
                 builder.AppendLine($"  +{method.Name}()");
             builder.AppendLine("}");
         }

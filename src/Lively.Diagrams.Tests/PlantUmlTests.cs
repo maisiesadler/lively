@@ -23,6 +23,8 @@ namespace Lively.Diagrams.Tests
 
 class ExampleTypeWithDeps {
 }
+class ExampleType {
+}
 ExampleTypeWithDeps ---> ExampleType
 
 @enduml";
@@ -45,15 +47,16 @@ ExampleTypeWithDeps ---> ExampleType
             var diagram = PlantUml.Create(new[] { depTree });
 
             var expected = @"@startuml
+
 class ExampleTypeWithInterfaceDeps {
 }
-ExampleTypeWithInterfaceDeps ---> ExampleInterface
-
 interface ExampleInterface {
 }
 class ExampleImplementation {
 }
 ExampleInterface <--- ExampleImplementation
+
+ExampleTypeWithInterfaceDeps ---> ExampleInterface
 
 @enduml";
 
@@ -78,13 +81,13 @@ ExampleInterface <--- ExampleImplementation
 
 class ExampleTypeWithInterfaceDeps {
 }
-ExampleTypeWithInterfaceDeps ---> ""2"" ExampleInterface
-
 interface ExampleInterface {
 }
 class ExampleImplementation {
 }
 ExampleInterface <--- ExampleImplementation
+
+ExampleTypeWithInterfaceDeps ---> ""2"" ExampleInterface
 
 @enduml";
 
@@ -106,6 +109,8 @@ ExampleInterface <--- ExampleImplementation
 
 class ExampleTypeWithGenericDeps {
 }
+class ExampleGenericType2 {
+}
 ExampleTypeWithGenericDeps ---> ExampleGenericType2
 
 @enduml";
@@ -123,8 +128,6 @@ ExampleTypeWithGenericDeps ---> ExampleGenericType2
             };
             var fullTypeName = typeof(ExampleInterfaceWithMethods).FullName;
 
-            System.Console.WriteLine(fullTypeName);
-
             var tree = new DependencyTree(config);
             var depTree = tree.GetDependencies(fullTypeName);
 
@@ -139,6 +142,38 @@ class ExampleImplementationWithMethods {
 }
 
 ExampleInterfaceWithMethods <--- ExampleImplementationWithMethods
+
+@enduml";
+
+            Assert.Equal(Normalise(expected), Normalise(diagram));
+        }
+
+        [Fact]
+        public void CanCreateDiagramForDependencyWithImplementationAndDependencies()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly)
+            {
+                StartupName = "Lively.Diagrams.Tests.PlantUmlTests+Startup",
+            };
+            var fullTypeName = typeof(ExampleInterfaceWithDependencies).FullName;
+
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
+
+            var diagram = PlantUml.Create(new[] { depTree });
+
+            var expected = @"@startuml
+
+interface ExampleInterfaceWithDependencies {
+}
+class ExampleImplementationWithDependencies {
+}
+ExampleInterfaceWithDependencies <--- ExampleImplementationWithDependencies
+class ExampleType {
+}
+
+ExampleImplementationWithDependencies ---> ExampleType
 
 @enduml";
 
@@ -202,12 +237,22 @@ ExampleInterfaceWithMethods <--- ExampleImplementationWithMethods
             public string Beans() => "hello";
         }
 
+        public interface ExampleInterfaceWithDependencies
+        {
+        }
+
+        public class ExampleImplementationWithDependencies : ExampleInterfaceWithDependencies
+        {
+            public ExampleImplementationWithDependencies(ExampleType exampleType) { }
+        }
+
         public class Startup
         {
             public void ConfigureServices(IServiceCollection services)
             {
                 services.AddTransient<ExampleInterface, ExampleImplementation>();
                 services.AddTransient<ExampleInterfaceWithMethods, ExampleImplementationWithMethods>();
+                services.AddTransient<ExampleInterfaceWithDependencies, ExampleImplementationWithDependencies>();
             }
         }
     }
