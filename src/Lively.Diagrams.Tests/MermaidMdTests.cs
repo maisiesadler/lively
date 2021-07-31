@@ -43,10 +43,10 @@ classDiagram
 
             var expected = @"```mermaid
 classDiagram
-  ExampleTypeWithInterfaceDeps --> ExampleInterface
   class ExampleInterface {
     ExampleImplementation
   }
+  ExampleTypeWithInterfaceDeps --> ExampleInterface
 ```";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));
@@ -68,10 +68,10 @@ classDiagram
 
             var expected = @"```mermaid
 classDiagram
-  ExampleTypeWithInterfaceDeps --> ""2"" ExampleInterface
   class ExampleInterface {
     ExampleImplementation
   }
+  ExampleTypeWithInterfaceDeps --> ""2"" ExampleInterface
 ```";
 
             Assert.Equal(Normalise(expected), Normalise(diagram));

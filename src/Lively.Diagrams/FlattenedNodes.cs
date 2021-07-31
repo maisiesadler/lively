@@ -4,10 +4,9 @@ using Lively.TypeDescriptions;
 
 namespace Lively.Diagrams
 {
-    internal record Relationship(ITypeDescription NodeType, ITypeDescription ImplementationType, IReadOnlyList<RelationshipChild> Children);
-    internal record RelationshipChild(ITypeDescription NodeType, ITypeDescription ImplementationType, int Count);
+    internal record Relationship(ITypeDescription Type, ITypeDescription ChildType, int Count);
 
-    internal record Implementation(ITypeDescription InterfaceType, ITypeDescription ImplementationType);
+    internal record TypeAndImplementation(ITypeDescription NodeType, ITypeDescription ImplementationType);
 
     internal class FlattenedNodes
     {
@@ -23,29 +22,31 @@ namespace Lively.Diagrams
             {
                 var node = _typeDescriptions[nodeFullName];
 
-                _implementations.TryGetValue(nodeFullName, out var nodeImplementation);
+                if (_implementations.TryGetValue(nodeFullName, out var nodeImplementation))
+                    node = nodeImplementation;
 
-                var relChildren = new List<RelationshipChild>();
                 foreach (var (childFullName, count) in children)
                 {
                     if (!_typeDescriptions.TryGetValue(childFullName, out var childType))
                         throw new InvalidOperationException($"Could not find child type {childFullName}");
-                    _implementations.TryGetValue(childFullName, out var childImplementation);
 
-                    relChildren.Add(new RelationshipChild(childType, childImplementation, count));
+                    yield return new Relationship(node, childType, count);
                 }
-
-                yield return new Relationship(node, nodeImplementation, relChildren);
             }
         }
 
-        public IEnumerable<Implementation> Implementations()
+        public ITypeDescription Implementation(ITypeDescription type)
         {
-            foreach (var (interfaceFullName, implementationType) in _implementations)
+            _implementations.TryGetValue(type.FullName, out var nodeImplementation);
+            return nodeImplementation;
+        }
+
+        public IEnumerable<TypeAndImplementation> TypesAndImplementations()
+        {
+            foreach (var (nodeFullName, nodeType) in _typeDescriptions)
             {
-                if (!_typeDescriptions.TryGetValue(interfaceFullName, out var interfaceType))
-                    throw new InvalidOperationException($"Could not find interface type {interfaceType}");
-                yield return new Implementation(interfaceType, implementationType);
+                _implementations.TryGetValue(nodeFullName, out var nodeImplementation);
+                yield return new TypeAndImplementation(nodeType, nodeImplementation);
             }
         }
 
