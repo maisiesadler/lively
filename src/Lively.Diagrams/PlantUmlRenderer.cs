@@ -69,6 +69,8 @@ namespace Lively.Diagrams
             var implementationTypeName = TypeNameSelector(implementationType);
 
             builder.AppendLine($"interface {interfaceTypeName} {{");
+            foreach (var method in nodeType.Methods)
+                builder.AppendLine($"  +{method.Name}()");
             builder.AppendLine("}");
 
             AppendClass(builder, implementationType);

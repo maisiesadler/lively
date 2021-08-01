@@ -135,6 +135,8 @@ Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleTypeWithGenericDeps ---> Live
 
             var expected = @"@startuml
 interface Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterfaceWithMethods {
+  +One()
+  +Beans()
 }
 class Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleImplementationWithMethods {
   +One()

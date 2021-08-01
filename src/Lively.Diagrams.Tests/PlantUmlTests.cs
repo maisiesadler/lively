@@ -135,6 +135,8 @@ ExampleTypeWithGenericDeps ---> ExampleGenericType2
 
             var expected = @"@startuml
 interface ExampleInterfaceWithMethods {
+  +One()
+  +Beans()
 }
 class ExampleImplementationWithMethods {
   +One()
