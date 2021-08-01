@@ -173,6 +173,8 @@ namespace Lively.Console.Configuration
                 OutputFormat = OutputFormatType.MermaidMd;
             else if (value == "plantuml")
                 OutputFormat = OutputFormatType.PlantUml;
+            else if (value == "fullnameplantuml")
+                OutputFormat = OutputFormatType.FullNamePlantUml;
             else if (!string.IsNullOrWhiteSpace(value))
                 System.Console.WriteLine($"Warning: output format '{value}' is unknown");
         }

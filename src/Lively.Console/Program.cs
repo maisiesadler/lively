@@ -67,6 +67,11 @@ namespace Lively.Console
                 var diagram = PlantUml.Create(nodes);
                 System.Console.WriteLine(diagram);
             }
+            else if (applicationConfig.OutputFormat == OutputFormatType.FullNamePlantUml)
+            {
+                var diagram = FullNamePlantUml.Create(nodes);
+                System.Console.WriteLine(diagram);
+            }
             else if (applicationConfig.OutputFormat == OutputFormatType.Debug)
             {
                 System.Console.WriteLine($"Got {nodes?.Count} nodes");

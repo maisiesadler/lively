@@ -8,5 +8,6 @@ namespace Lively.Console.Configuration
         Mermaid,
         MermaidMd,
         PlantUml,
+        FullNamePlantUml,
     }
 }
