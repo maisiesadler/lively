@@ -150,6 +150,31 @@ Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterfaceWithMethods <--- Liv
             Assert.Equal(Normalise(expected), Normalise(diagram));
         }
 
+        [Fact]
+        public void CanApplyCustomNamespaceGrouping()
+        {
+            var assembly = this.GetType().Assembly;
+            var config = new DependencyTreeConfig(assembly);
+            var fullTypeName = "Lively.Diagrams.Tests.FullNamePlantUmlTests+ExampleTypeReferencingOtherAssemblies";
+
+            var tree = new DependencyTree(config);
+            var depTree = tree.GetDependencies(fullTypeName);
+            var diagram = FullNamePlantUml.Create(new[] { depTree }, new[] { "Lively.Diagrams.Tests", "Lively.Diagrams" });
+
+            var expected = @"@startuml
+
+class Lively.Diagrams.Tests.FullNamePlantUmlTests_ExampleTypeReferencingOtherAssemblies {
+}
+class Lively.Diagrams.FullNamePlantUml {
+}
+
+Lively.Diagrams.Tests.FullNamePlantUmlTests_ExampleTypeReferencingOtherAssemblies ---> Lively.Diagrams.FullNamePlantUml
+
+@enduml";
+
+            Assert.Equal(Normalise(expected), Normalise(diagram));
+        }
+
         private static string Normalise(string s)
         {
             return _whitespace.Replace(s, "\n").Trim();
@@ -205,6 +230,11 @@ Lively.Diagrams.Tests.FullNamePlantUmlTests.ExampleInterfaceWithMethods <--- Liv
         {
             public void One() { }
             public string Beans() => "hello";
+        }
+
+        public class ExampleTypeReferencingOtherAssemblies
+        {
+            public ExampleTypeReferencingOtherAssemblies(FullNamePlantUml fullNamePlantUml) { }
         }
 
         public class Startup
