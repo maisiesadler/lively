@@ -4,13 +4,13 @@ namespace Lively.Diagrams
 {
     public class FullNamePlantUml
     {
-        public static string Create(IList<DependencyTreeNode> nodes, string[] namespaceMatches = null)
+        public static string Create(IList<DependencyTreeNode> nodes, string[] customNamespaceGrouping = null)
         {
             var renderer = new PlantUmlRenderer(type =>
             {
-                if (namespaceMatches != null)
+                if (customNamespaceGrouping != null)
                 {
-                    foreach (var ns in namespaceMatches)
+                    foreach (var ns in customNamespaceGrouping)
                     {
                         if (type.FullName.StartsWith(ns + "."))
                             return OverrideNamespaceGrouping(ns, type.FullName);
