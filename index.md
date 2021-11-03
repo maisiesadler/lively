@@ -5,7 +5,7 @@ title: 'Lively 🌳'
 
 _Living Documentation 🌳_
 
-[Example yumlmd ouput](./DependencyTree.md) for this repository:
+[Example yumlmd ouput](https://github.com/maisiesadler/lively/blob/main/DependencyTree.md) for this repository:
 
 <img src="http://yuml.me/diagram/scruffy/class/[DependencyTree]-&gt;[DependencyTreeConfig], [DependencyTreeConfig]-&gt;[Assembly], [DependencyTreeConfig]-&gt;[IConfiguration], [DependencyTreeConfig]-&gt;[HashSet`1], [DependencyTreeConfig]-&gt;[String]" />
 
@@ -23,11 +23,11 @@ It is available as a [GitHub Action](#github-action) and a [Nuget](#nuget) packa
 
 ### GitHub Action
 
-Available [here](https://github.com/marketplace/actions/generate-dependency-diagrams).
+Available [here](https://github.com/marketplace/actions/lively-docs).
 
-The GitHub action is defined in [./action.yml](./action.yml) and  uses the [Dockerfile](./Dockerfile) in the root of the project.
+The GitHub action is defined in [./action.yml](https://github.com/maisiesadler/lively/blob/main/action.yml) and  uses the [Dockerfile](https://github.com/maisiesadler/lively/blob/main/Dockerfile) in the root of the project.
 
-Example outputs can be found [here](./example-outputs)
+Example outputs can be found [here](https://github.com/maisiesadler/lively/blob/main/example-outputs)
 
 #### Example worflow
 
@@ -114,7 +114,7 @@ System.Console.WriteLine(diagram);
 
 There is support for passing in a config file for multiple `Skip` or `Generate` (root) types.
 
-[Example](./applicationconfig.json)
+[Example](https://github.com/maisiesadler/lively/blob/main/applicationconfig.json)
 
 #### Interface Resolver Type
 
